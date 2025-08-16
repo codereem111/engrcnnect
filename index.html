@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f0f2f5;
+            background-color: #e5e7eb; /* Softer light gray background */
             font-family: 'Inter', sans-serif;
         }
         .card {
@@ -18,7 +18,7 @@
             border-radius: 1rem;
         }
         .header {
-            background-color: #0d6efd; /* Bootstrap primary blue */
+            background-color: #4338CA; /* Deep indigo color */
             border-radius: 1rem 1rem 0 0;
             color: white;
             padding: 1.5rem;
@@ -26,17 +26,44 @@
         .department-filter .btn {
             border-radius: 50rem;
             transition: all 0.2s ease-in-out;
+            color: #4b5563; /* Darker gray text */
         }
         .department-filter .btn.active {
-            background-color: #0d6efd;
+            background-color: #4338CA;
             color: white;
-            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+            box-shadow: 0 .5rem 1rem rgba(67, 56, 202, 0.2);
         }
         .notification-card {
             transition: transform 0.2s ease-in-out;
         }
         .notification-card:hover {
             transform: translateY(-5px);
+        }
+        .btn-post {
+            background-color: #4338CA;
+            color: white;
+            border-color: #4338CA;
+        }
+        .btn-post:hover {
+            background-color: #3730a3;
+            border-color: #3730a3;
+            color: white;
+        }
+        .btn-toggle {
+            background-color: #6366f1; /* Lighter indigo for the toggle button */
+            border-color: #6366f1;
+            color: white;
+        }
+        .btn-toggle:hover {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+        .bg-primary {
+            background-color: #4338CA !important;
+        }
+        .text-primary {
+            color: #4338CA !important;
         }
     </style>
 </head>
@@ -53,7 +80,7 @@
 
             <!-- Admin Panel Toggle Button (for demonstration) -->
             <div class="p-4 bg-light">
-                <button id="toggleAdminBtn" class="btn btn-info w-100 fw-bold">
+                <button id="toggleAdminBtn" class="btn btn-toggle w-100 fw-bold">
                     Show Admin Panel
                 </button>
                 <div id="adminPanel" class="mt-4 p-4 bg-white rounded-3 shadow-sm" style="display: none;">
@@ -76,7 +103,12 @@
                                 <option value="Chemical">Chemical</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 fw-bold">Post Notification</button>
+                        <!-- New: Expiration Date input -->
+                        <div class="mb-3">
+                            <label for="postExpirationDate" class="form-label">Expiration Date</label>
+                            <input type="date" class="form-control" id="postExpirationDate">
+                        </div>
+                        <button type="submit" class="btn btn-post w-100 fw-bold">Post Notification</button>
                     </form>
                 </div>
             </div>
@@ -142,12 +174,14 @@
 
                     // Using mock data for demonstration purposes
                     const mockData = [
-                        { id: 1, title: 'Exam Timetable', body: 'The final exam timetable has been posted on the faculty portal.', department: 'All', timestamp: new Date(Date.now() - 1200000) },
-                        { id: 2, title: 'Lab Session Cancelled', body: 'The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.', department: 'Mechanical', timestamp: new Date(Date.now() - 3600000) },
-                        { id: 3, title: 'Senior Project Submission', body: 'Reminder: All senior projects are due this Friday. Submit your report on the departmental website.', department: 'All', timestamp: new Date(Date.now() - 7200000) },
-                        { id: 4, title: 'Guest Lecture', body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.', department: 'Electrical', timestamp: new Date(Date.now() - 10800000) },
-                        { id: 5, title: 'Exam Results', body: 'Final exam results for Civil Engineering have been released.', department: 'Civil', timestamp: new Date(Date.now() - 14400000) },
-                        { id: 6, title: 'Field Trip', body: 'Chemical Engineering students have a mandatory field trip to the local refinery next week.', department: 'Chemical', timestamp: new Date(Date.now() - 18000000) }
+                        { id: 1, title: 'Exam Timetable', body: 'The final exam timetable has been posted on the faculty portal.', department: 'All', timestamp: new Date(Date.now() - 1200000), expirationDate: '2025-10-30' },
+                        { id: 2, title: 'Lab Session Cancelled', body: 'The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.', department: 'Mechanical', timestamp: new Date(Date.now() - 3600000), expirationDate: '2025-08-17' },
+                        { id: 3, title: 'Senior Project Submission', body: 'Reminder: All senior projects are due this Friday. Submit your report on the departmental website.', department: 'All', timestamp: new Date(Date.now() - 7200000), expirationDate: '2025-09-01' },
+                        { id: 4, title: 'Guest Lecture', body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.', department: 'Electrical', timestamp: new Date(Date.now() - 10800000), expirationDate: '2025-08-20' },
+                        { id: 5, title: 'Exam Results', body: 'Final exam results for Civil Engineering have been released.', department: 'Civil', timestamp: new Date(Date.now() - 14400000), expirationDate: '2025-09-15' },
+                        { id: 6, title: 'Field Trip', body: 'Chemical Engineering students have a mandatory field trip to the local refinery next week.', department: 'Chemical', timestamp: new Date(Date.now() - 18000000), expirationDate: '2025-08-25' },
+                        // An expired notification to demonstrate filtering
+                        { id: 7, title: 'Past Event', body: 'This notification expired yesterday.', department: 'All', timestamp: new Date(Date.now() - 24*60*60*1000 - 1), expirationDate: '2025-08-15'}
                     ];
 
                     allNotifications = mockData;
@@ -163,13 +197,15 @@
              * Renders notifications based on the current department filter.
              */
             function renderNotifications() {
-                // Filter notifications
+                // Filter out expired notifications and filter by department
+                const today = new Date().toISOString().slice(0, 10);
                 const filteredNotifications = allNotifications.filter(notif =>
-                    currentDepartment === 'All' || notif.department === currentDepartment
+                    (currentDepartment === 'All' || notif.department === currentDepartment) &&
+                    (!notif.expirationDate || notif.expirationDate >= today)
                 ).sort((a, b) => b.timestamp - a.timestamp);
 
                 if (filteredNotifications.length === 0) {
-                    notificationList.innerHTML = `<div class="text-center text-muted p-5">No notifications found for this department.</div>`;
+                    notificationList.innerHTML = `<div class="text-center text-muted p-5">No active notifications found for this department.</div>`;
                     return;
                 }
 
@@ -182,6 +218,7 @@
                         </div>
                         <h5 class="card-title fw-bold">${notif.title}</h5>
                         <p class="card-text">${notif.body}</p>
+                        ${notif.expirationDate ? `<p class="mt-2 mb-0"><small class="text-danger fw-bold">Expires: ${notif.expirationDate}</small></p>` : ''}
                     </div>
                 `).join('');
 
@@ -196,6 +233,7 @@
                 const title = document.getElementById('postTitle').value;
                 const body = document.getElementById('postBody').value;
                 const department = document.getElementById('postDepartment').value;
+                const expirationDate = document.getElementById('postExpirationDate').value;
 
                 if (!title || !body) {
                     alert('Please fill in all fields.');
@@ -206,6 +244,7 @@
                     title,
                     body,
                     department,
+                    expirationDate,
                     // A backend would handle the timestamp and adminId
                     timestamp: new Date().toISOString(),
                     adminId: 'mock-admin'
