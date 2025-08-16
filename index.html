@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EngrConnect</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            border: none;
+            border-radius: 1rem;
+        }
+        .header {
+            background-color: #0d6efd; /* Bootstrap primary blue */
+            border-radius: 1rem 1rem 0 0;
+            color: white;
+            padding: 1.5rem;
+        }
+        .department-filter .btn {
+            border-radius: 50rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .department-filter .btn.active {
+            background-color: #0d6efd;
+            color: white;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+        }
+        .notification-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .notification-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container my-5">
+        <div class="card shadow-lg">
+            <!-- Header -->
+            <div class="header d-flex justify-content-between align-items-center">
+                <h1 class="h2 mb-0 fw-bold">EngrConnect</h1>
+                <!-- This would be replaced by backend user info -->
+                <small class="text-white-50">User: 1a2b3c4d...</small>
+            </div>
+
+            <!-- Admin Panel Toggle Button (for demonstration) -->
+            <div class="p-4 bg-light">
+                <button id="toggleAdminBtn" class="btn btn-info w-100 fw-bold">
+                    Show Admin Panel
+                </button>
+                <div id="adminPanel" class="mt-4 p-4 bg-white rounded-3 shadow-sm" style="display: none;">
+                    <h2 class="h5 mb-4 fw-bold">Admin Panel</h2>
+                    <form id="postForm">
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="postTitle" placeholder="e.g., Test Tomorrow">
+                        </div>
+                        <div class="mb-3">
+                            <label for="postBody" class="form-label">Body</label>
+                            <textarea class="form-control" id="postBody" rows="4" placeholder="e.g., Thermodynamics class is cancelled today."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postDepartment" class="form-label">Department</label>
+                            <select class="form-select" id="postDepartment">
+                                <option value="Civil">Civil</option>
+                                <option value="Mechanical">Mechanical</option>
+                                <option value="Electrical">Electrical</option>
+                                <option value="Chemical">Chemical</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">Post Notification</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Department Filter -->
+            <div class="department-filter p-4 bg-light d-flex justify-content-center flex-wrap">
+                <button class="btn btn-outline-secondary m-1 active" data-dept="All">All</button>
+                <button class="btn btn-outline-secondary m-1" data-dept="Civil">Civil</button>
+                <button class="btn btn-outline-secondary m-1" data-dept="Mechanical">Mechanical</button>
+                <button class="btn btn-outline-secondary m-1" data-dept="Electrical">Electrical</button>
+                <button class="btn btn-outline-secondary m-1" data-dept="Chemical">Chemical</button>
+            </div>
+
+            <!-- Notifications List -->
+            <div id="notificationList" class="p-4 bg-light">
+                <!-- Notifications will be rendered here by JavaScript -->
+                <div class="text-center text-muted p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading notifications...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- UI Elements ---
+            const notificationList = document.getElementById('notificationList');
+            const departmentFilter = document.querySelector('.department-filter');
+            const toggleAdminBtn = document.getElementById('toggleAdminBtn');
+            const adminPanel = document.getElementById('adminPanel');
+            const postForm = document.getElementById('postForm');
+
+            // --- Backend API Endpoints (Mocks) ---
+            // A backend programmer would replace these with real API URLs.
+            const API_URLS = {
+                fetch: 'https://api.example.com/notifications',
+                post: 'https://api.example.com/notifications'
+            };
+
+            // --- State and Data ---
+            let allNotifications = [];
+            let currentDepartment = 'All';
+
+            // --- Functions ---
+
+            /**
+             * Fetches notifications from a mock API endpoint.
+             * A backend programmer would implement a real REST API here.
+             */
+            async function fetchNotifications() {
+                try {
+                    // Simulate fetching data from a backend server.
+                    // A backend programmer would provide a real URL here.
+                    // const response = await fetch(API_URLS.fetch);
+                    // const data = await response.json();
+
+                    // Using mock data for demonstration purposes
+                    const mockData = [
+                        { id: 1, title: 'Exam Timetable', body: 'The final exam timetable has been posted on the faculty portal.', department: 'All', timestamp: new Date(Date.now() - 1200000) },
+                        { id: 2, title: 'Lab Session Cancelled', body: 'The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.', department: 'Mechanical', timestamp: new Date(Date.now() - 3600000) },
+                        { id: 3, title: 'Senior Project Submission', body: 'Reminder: All senior projects are due this Friday. Submit your report on the departmental website.', department: 'All', timestamp: new Date(Date.now() - 7200000) },
+                        { id: 4, title: 'Guest Lecture', body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.', department: 'Electrical', timestamp: new Date(Date.now() - 10800000) },
+                        { id: 5, title: 'Exam Results', body: 'Final exam results for Civil Engineering have been released.', department: 'Civil', timestamp: new Date(Date.now() - 14400000) },
+                        { id: 6, title: 'Field Trip', body: 'Chemical Engineering students have a mandatory field trip to the local refinery next week.', department: 'Chemical', timestamp: new Date(Date.now() - 18000000) }
+                    ];
+
+                    allNotifications = mockData;
+                    renderNotifications();
+
+                } catch (error) {
+                    console.error('Error fetching notifications:', error);
+                    notificationList.innerHTML = `<div class="alert alert-danger" role="alert">Failed to load notifications. Please check your network connection.</div>`;
+                }
+            }
+
+            /**
+             * Renders notifications based on the current department filter.
+             */
+            function renderNotifications() {
+                // Filter notifications
+                const filteredNotifications = allNotifications.filter(notif =>
+                    currentDepartment === 'All' || notif.department === currentDepartment
+                ).sort((a, b) => b.timestamp - a.timestamp);
+
+                if (filteredNotifications.length === 0) {
+                    notificationList.innerHTML = `<div class="text-center text-muted p-5">No notifications found for this department.</div>`;
+                    return;
+                }
+
+                // Generate HTML for each notification
+                const notificationsHtml = filteredNotifications.map(notif => `
+                    <div class="card p-4 mb-3 shadow-sm notification-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge rounded-pill bg-primary">${notif.department}</span>
+                            <small class="text-muted">${new Date(notif.timestamp).toLocaleString()}</small>
+                        </div>
+                        <h5 class="card-title fw-bold">${notif.title}</h5>
+                        <p class="card-text">${notif.body}</p>
+                    </div>
+                `).join('');
+
+                notificationList.innerHTML = notificationsHtml;
+            }
+
+            /**
+             * Submits a new notification to a mock API endpoint.
+             */
+            async function postNotification(e) {
+                e.preventDefault();
+                const title = document.getElementById('postTitle').value;
+                const body = document.getElementById('postBody').value;
+                const department = document.getElementById('postDepartment').value;
+
+                if (!title || !body) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+
+                const newNotification = {
+                    title,
+                    body,
+                    department,
+                    // A backend would handle the timestamp and adminId
+                    timestamp: new Date().toISOString(),
+                    adminId: 'mock-admin'
+                };
+
+                try {
+                    // This is where a backend programmer would handle the API call
+                    // const response = await fetch(API_URLS.post, {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //     },
+                    //     body: JSON.stringify(newNotification),
+                    // });
+                    // const result = await response.json();
+
+                    // Simulate success
+                    allNotifications.unshift({ ...newNotification, id: Date.now(), timestamp: new Date() });
+                    renderNotifications();
+                    alert('Notification posted successfully!');
+                    postForm.reset();
+                } catch (error) {
+                    console.error('Error posting notification:', error);
+                    alert('Failed to post notification. Please try again.');
+                }
+            }
+
+            // --- Event Listeners ---
+            
+            // Toggle admin panel visibility
+            toggleAdminBtn.addEventListener('click', () => {
+                const isVisible = adminPanel.style.display === 'block';
+                adminPanel.style.display = isVisible ? 'none' : 'block';
+                toggleAdminBtn.textContent = isVisible ? 'Show Admin Panel' : 'Hide Admin Panel';
+            });
+
+            // Handle department filter clicks
+            departmentFilter.addEventListener('click', (e) => {
+                if (e.target.matches('.btn')) {
+                    // Remove 'active' from all buttons
+                    document.querySelectorAll('.department-filter .btn').forEach(btn => btn.classList.remove('active'));
+                    // Add 'active' to the clicked button
+                    e.target.classList.add('active');
+                    // Update and re-render based on the new department
+                    currentDepartment = e.target.dataset.dept;
+                    renderNotifications();
+                }
+            });
+
+            // Handle admin form submission
+            postForm.addEventListener('submit', postNotification);
+
+            // --- Initial Load ---
+            fetchNotifications();
+        });
+    </script>
+</body>
+</html>
