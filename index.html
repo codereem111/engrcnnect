@@ -10,15 +10,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            background-color: #e5e7eb; /* Softer light gray background */
+            background-color: #e5e7eb;
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
         }
         .card {
             border: none;
             border-radius: 1rem;
         }
         .header {
-            background-color: #4338CA; /* Deep indigo color */
+            background-color: #4338CA;
             border-radius: 1rem 1rem 0 0;
             color: white;
             padding: 1.5rem;
@@ -26,7 +27,7 @@
         .department-filter .btn {
             border-radius: 50rem;
             transition: all 0.2s ease-in-out;
-            color: #4b5563; /* Darker gray text */
+            color: #4b5563;
         }
         .department-filter .btn.active {
             background-color: #4338CA;
@@ -50,7 +51,7 @@
             color: white;
         }
         .btn-toggle {
-            background-color: #6366f1; /* Lighter indigo for the toggle button */
+            background-color: #6366f1;
             border-color: #6366f1;
             color: white;
         }
@@ -65,6 +66,49 @@
         .text-primary {
             color: #4338CA !important;
         }
+        .nav-icon {
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        .notification-icon-container {
+            position: relative;
+        }
+        .notification-badge {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            transform: translate(50%, -50%);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+        }
+        .dark-mode {
+            background-color: #1a202c !important;
+            color: #e2e8f0;
+        }
+        .dark-mode .card,
+        .dark-mode .bg-light {
+            background-color: #2d3748 !important;
+            color: #e2e8f0;
+        }
+        .dark-mode .header {
+            background-color: #3730a3;
+        }
+        .dark-mode .department-filter .btn {
+            color: #cbd5e0;
+        }
+        .dark-mode .department-filter .btn.active {
+            background-color: #4338CA;
+            color: white;
+        }
+        .dark-mode .text-muted {
+            color: #a0aec0 !important;
+        }
+        .dark-mode .btn-post,
+        .dark-mode .btn-toggle {
+            background-color: #4338CA;
+            border-color: #4338CA;
+        }
     </style>
 </head>
 <body>
@@ -74,8 +118,26 @@
             <!-- Header -->
             <div class="header d-flex justify-content-between align-items-center">
                 <h1 class="h2 mb-0 fw-bold">EngrConnect</h1>
-                <!-- This would be replaced by backend user info -->
-                <small class="text-white-50">User: 22/30......</small>
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Dark Mode Toggle -->
+                    <i id="darkModeToggle" class="bi bi-moon-fill nav-icon"></i>
+
+                    <!-- Notification Icon -->
+                    <div class="notification-icon-container">
+                        <i id="notificationIcon" class="bi bi-bell-fill nav-icon"></i>
+                        <span id="notificationBadge" class="badge bg-danger rounded-pill notification-badge" style="display: none;">0</span>
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown">
+                        <i class="bi bi-person-circle nav-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item disabled" href="#">User: 22/30...</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- Admin Panel Toggle Button (for demonstration) -->
@@ -103,7 +165,6 @@
                                 <option value="Chemical">Chemical</option>
                             </select>
                         </div>
-                        <!-- New: Expiration Date input -->
                         <div class="mb-3">
                             <label for="postExpirationDate" class="form-label">Expiration Date</label>
                             <input type="date" class="form-control" id="postExpirationDate">
@@ -147,9 +208,10 @@
             const toggleAdminBtn = document.getElementById('toggleAdminBtn');
             const adminPanel = document.getElementById('adminPanel');
             const postForm = document.getElementById('postForm');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const notificationBadge = document.getElementById('notificationBadge');
 
             // --- Backend API Endpoints (Mocks) ---
-            // A backend programmer would replace these with real API URLs.
             const API_URLS = {
                 fetch: 'https://api.example.com/notifications',
                 post: 'https://api.example.com/notifications'
@@ -160,6 +222,17 @@
             let currentDepartment = 'All';
 
             // --- Functions ---
+            
+            // Updates the notification badge count
+            function updateNotificationBadge() {
+                const unreadCount = allNotifications.filter(notif => !notif.isRead).length;
+                if (unreadCount > 0) {
+                    notificationBadge.textContent = unreadCount;
+                    notificationBadge.style.display = 'block';
+                } else {
+                    notificationBadge.style.display = 'none';
+                }
+            }
 
             /**
              * Fetches notifications from a mock API endpoint.
@@ -167,25 +240,21 @@
              */
             async function fetchNotifications() {
                 try {
-                    // Simulate fetching data from a backend server.
-                    // A backend programmer would provide a real URL here.
-                    // const response = await fetch(API_URLS.fetch);
-                    // const data = await response.json();
-
                     // Using mock data for demonstration purposes
                     const mockData = [
-                        { id: 1, title: 'Exam Timetable', body: 'The final exam timetable has been posted on the faculty portal.', department: 'All', timestamp: new Date(Date.now() - 1200000), expirationDate: '2025-10-30' },
-                        { id: 2, title: 'Lab Session Cancelled', body: 'The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.', department: 'Mechanical', timestamp: new Date(Date.now() - 3600000), expirationDate: '2025-08-17' },
-                        { id: 3, title: 'Senior Project Submission', body: 'Reminder: All senior projects are due this Friday. Submit your report on the departmental website.', department: 'All', timestamp: new Date(Date.now() - 7200000), expirationDate: '2025-09-01' },
-                        { id: 4, title: 'Guest Lecture', body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.', department: 'Electrical', timestamp: new Date(Date.now() - 10800000), expirationDate: '2025-08-20' },
-                        { id: 5, title: 'Exam Results', body: 'Final exam results for Civil Engineering have been released.', department: 'Civil', timestamp: new Date(Date.now() - 14400000), expirationDate: '2025-09-15' },
-                        { id: 6, title: 'Field Trip', body: 'Chemical Engineering students have a mandatory field trip to the local refinery next week.', department: 'Chemical', timestamp: new Date(Date.now() - 18000000), expirationDate: '2025-08-25' },
+                        { id: 1, title: 'Exam Timetable', body: 'The final exam timetable has been posted on the faculty portal.', department: 'All', timestamp: new Date(Date.now() - 1200000), expirationDate: '2025-10-30', posterName: 'Engr Zakriya', isRead: false },
+                        { id: 2, title: 'Lab Session Cancelled', body: 'The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.', department: 'Mechanical', timestamp: new Date(Date.now() - 3600000), expirationDate: '2025-08-17', posterName: 'Engr K.O abdulrahman', isRead: true },
+                        { id: 3, title: 'Senior Project Submission', body: 'Reminder: All senior projects are due this Friday. Submit your report on the departmental website.', department: 'All', timestamp: new Date(Date.now() - 7200000), expirationDate: '2025-09-01', posterName: 'Faculty officer', isRead: false },
+                        { id: 4, title: 'Guest Lecture', body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.', department: 'Electrical', timestamp: new Date(Date.now() - 10800000), expirationDate: '2025-08-20', posterName: 'Engr Alao', isRead: true },
+                        { id: 5, title: 'Exam Results', body: 'Final exam results for Civil Engineering have been released.', department: 'Civil', timestamp: new Date(Date.now() - 14400000), expirationDate: '2025-09-15', posterName: 'Engr Zakriya', isRead: false },
+                        { id: 6, title: 'Field Trip', body: 'Chemical Engineering students have a mandatory field trip to the local refinery next week.', department: 'Chemical', timestamp: new Date(Date.now() - 18000000), expirationDate: '2025-08-25', posterName: 'Faculty officer', isRead: true },
                         // An expired notification to demonstrate filtering
-                        { id: 7, title: 'Past Event', body: 'This notification expired yesterday.', department: 'All', timestamp: new Date(Date.now() - 24*60*60*1000 - 1), expirationDate: '2025-08-15'}
+                        { id: 7, title: 'Past Event', body: 'This notification expired yesterday.', department: 'All', timestamp: new Date(Date.now() - 24*60*60*1000 - 1), expirationDate: '2025-08-15', posterName: 'Engr Alao', isRead: true }
                     ];
 
                     allNotifications = mockData;
                     renderNotifications();
+                    updateNotificationBadge();
 
                 } catch (error) {
                     console.error('Error fetching notifications:', error);
@@ -197,7 +266,6 @@
              * Renders notifications based on the current department filter.
              */
             function renderNotifications() {
-                // Filter out expired notifications and filter by department
                 const today = new Date().toISOString().slice(0, 10);
                 const filteredNotifications = allNotifications.filter(notif =>
                     (currentDepartment === 'All' || notif.department === currentDepartment) &&
@@ -209,7 +277,6 @@
                     return;
                 }
 
-                // Generate HTML for each notification
                 const notificationsHtml = filteredNotifications.map(notif => `
                     <div class="card p-4 mb-3 shadow-sm notification-card">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -218,6 +285,7 @@
                         </div>
                         <h5 class="card-title fw-bold">${notif.title}</h5>
                         <p class="card-text">${notif.body}</p>
+                        <p class="mt-2 mb-0"><small class="text-muted fst-italic">Posted by: ${notif.posterName}</small></p>
                         ${notif.expirationDate ? `<p class="mt-2 mb-0"><small class="text-danger fw-bold">Expires: ${notif.expirationDate}</small></p>` : ''}
                     </div>
                 `).join('');
@@ -245,25 +313,17 @@
                     body,
                     department,
                     expirationDate,
-                    // A backend would handle the timestamp and adminId
+                    // A backend would handle these
                     timestamp: new Date().toISOString(),
-                    adminId: 'mock-admin'
+                    posterName: 'Admin User',
+                    isRead: false
                 };
 
                 try {
-                    // This is where a backend programmer would handle the API call
-                    // const response = await fetch(API_URLS.post, {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //     },
-                    //     body: JSON.stringify(newNotification),
-                    // });
-                    // const result = await response.json();
-
                     // Simulate success
                     allNotifications.unshift({ ...newNotification, id: Date.now(), timestamp: new Date() });
                     renderNotifications();
+                    updateNotificationBadge();
                     alert('Notification posted successfully!');
                     postForm.reset();
                 } catch (error) {
@@ -284,11 +344,8 @@
             // Handle department filter clicks
             departmentFilter.addEventListener('click', (e) => {
                 if (e.target.matches('.btn')) {
-                    // Remove 'active' from all buttons
                     document.querySelectorAll('.department-filter .btn').forEach(btn => btn.classList.remove('active'));
-                    // Add 'active' to the clicked button
                     e.target.classList.add('active');
-                    // Update and re-render based on the new department
                     currentDepartment = e.target.dataset.dept;
                     renderNotifications();
                 }
@@ -297,10 +354,20 @@
             // Handle admin form submission
             postForm.addEventListener('submit', postNotification);
 
+            // Toggle dark mode
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+            });
+
+            // Mock log out action
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                alert('Logging out...');
+                // In a real application, you would clear auth tokens and redirect
+            });
+
             // --- Initial Load ---
             fetchNotifications();
         });
     </script>
 </body>
 </html>
-
