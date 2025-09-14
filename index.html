@@ -382,10 +382,6 @@
                     <div class="mb-2">
                         <select class="form-select text-center" id="adminRoleSelect">
                             <option value="" disabled selected>Select Admin Role</option>
-                            <option value="Faculty President">Faculty President</option>
-                            <option value="Dean">Dean</option>
-                            <option value="Sub-Dean">Sub-Dean</option>
-                            <option value="Faculty PRO">Faculty PRO</option>
                             <option value="Level Adviser">Level Adviser</option>
                             <option value="HOD">HOD</option>
                             <option value="Faculty Officer">Faculty Officer</option>
@@ -405,7 +401,32 @@
                     </div>
                 </div>
 
-                <div id="studentSecurityFields" class="mb-3">
+                <div id="studentSpecificFields" class="mb-3">
+                    <div class="mb-2">
+                        <select class="form-select text-center" id="studentDepartmentSelect">
+                            <option value="" disabled selected>Select Department</option>
+                            <option value="Agricultural and Bio Systems">Agricultural and Bio Systems Engineering</option>
+                            <option value="Water Resources and Environmental">Water Resources and Environmental Engineering</option>
+                            <option value="Chemical">Chemical Engineering</option>
+                            <option value="Food">Food Engineering</option>
+                            <option value="Computer">Computer Engineering</option>
+                            <option value="Electrical">Electrical Engineering</option>
+                            <option value="Civil">Civil Engineering</option>
+                            <option value="Mechanical">Mechanical Engineering</option>
+                            <option value="Biomedical">Biomedical Engineering</option>
+                            <option value="Material and Metallurgical">Material and Metallurgical Engineering</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <select class="form-select text-center" id="studentLevelSelect">
+                            <option value="" disabled selected>Select Level</option>
+                            <option value="100">100-level</option>
+                            <option value="200">200-level</option>
+                            <option value="300">300-level</option>
+                            <option value="400">400-level</option>
+                            <option value="500">500-level</option>
+                        </select>
+                    </div>
                     <div class="mb-2">
                         <select class="form-select text-center" id="securityQuestionSelect">
                             <option value="" disabled selected>Select a Security Question</option>
@@ -524,14 +545,14 @@
                     <div class="row g-2 mb-2">
                         <div class="col-md-6">
                             <select class="form-select" id="switchAdminRoleSelect">
-                                <option value="Faculty President">Faculty President</option>
-                                <option value="Dean">Dean</option>
-                                <option value="Sub-Dean">Sub-Dean</option>
-                                <option value="Faculty PRO">Faculty PRO</option>
                                 <option value="Level Adviser">Level Adviser</option>
                                 <option value="HOD">HOD</option>
                                 <option value="Faculty Officer">Faculty Officer</option>
                                 <option value="Lecturer">Lecturer</option>
+                                <option value="Faculty President">Faculty President</option>
+                                <option value="Dean">Dean</option>
+                                <option value="Sub-Dean">Sub-Dean</option>
+                                <option value="Faculty PRO">Faculty PRO</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -563,15 +584,15 @@
                         <select class="form-select" id="postDepartment">
                             <option value="All">All Departments</option>
                             <option value="Agricultural and Bio Systems">Agricultural and Bio Systems</option>
-                            <option value="Biomedical">Biomedical</option>
+                            <option value="Water Resources and Environmental">Water Resources and Environmental</option>
                             <option value="Chemical">Chemical</option>
-                            <option value="Civil">Civil</option>
+                            <option value="Food">Food</option>
                             <option value="Computer">Computer</option>
                             <option value="Electrical">Electrical</option>
-                            <option value="Food">Food</option>
-                            <option value="Material and Metallurgical">Material and Metallurgical</option>
+                            <option value="Civil">Civil</option>
                             <option value="Mechanical">Mechanical</option>
-                            <option value="Water Resources and Environmental">Water Resources and Environmental</option>
+                            <option value="Biomedical">Biomedical</option>
+                            <option value="Material and Metallurgical">Material and Metallurgical</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -583,18 +604,7 @@
             </div>
             
             <div id="departmentTabs" class="department-tabs d-flex justify-content-start flex-wrap mb-4">
-                <button class="btn m-1 active" data-dept="All">All</button>
-                <button class="btn m-1" data-dept="Agricultural and Bio Systems">Agricultural and Bio Systems</button>
-                <button class="btn m-1" data-dept="Biomedical">Biomedical</button>
-                <button class="btn m-1" data-dept="Chemical">Chemical</button>
-                <button class="btn m-1" data-dept="Civil">Civil</button>
-                <button class="btn m-1" data-dept="Computer">Computer</button>
-                <button class="btn m-1" data-dept="Electrical">Electrical</button>
-                <button class="btn m-1" data-dept="Food">Food</button>
-                <button class="btn m-1" data-dept="Material and Metallurgical">Material and Metallurgical</button>
-                <button class="btn m-1" data-dept="Mechanical">Mechanical</button>
-                <button class="btn m-1" data-dept="Water Resources and Environmental">Water Resources and Environmental</button>
-            </div>
+                </div>
             
             <div id="notificationList">
                 <div class="text-center text-muted p-5">
@@ -643,6 +653,8 @@
             const newPasswordConfirmInput = document.getElementById('newPasswordConfirmInput');
             const forgotPasswordSubmitBtn = document.getElementById('forgotPasswordSubmitBtn');
             const forgotPasswordPrompt = document.getElementById('forgotPasswordPrompt');
+            const studentDepartmentSelect = document.getElementById('studentDepartmentSelect');
+            const studentLevelSelect = document.getElementById('studentLevelSelect');
 
             const notificationList = document.getElementById('notificationList');
             const departmentTabs = document.getElementById('departmentTabs');
@@ -656,7 +668,7 @@
             const userRoleDisplay = document.getElementById('userRoleDisplay');
             const sidebar = document.querySelector('.sidebar');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const studentSecurityFields = document.getElementById('studentSecurityFields');
+            const studentSpecificFields = document.getElementById('studentSpecificFields');
             const adminSpecificFields = document.getElementById('adminSpecificFields');
             const adminRoleSelect = document.getElementById('adminRoleSelect');
             const adminLevelSelect = document.getElementById('adminLevelSelect');
@@ -674,7 +686,7 @@
             // --- Hardcoded Credentials for Demo ---
             const credentials = {
                 'admin': { 'admin@engrconnect.edu': { password: 'password123', adminRole: 'HOD', adminLevel: 'All' } },
-                'student': { '22/30GR023': { password: 'password123', securityQuestion: 'What is your favorite color?', securityAnswer: 'blue' } }
+                'student': { '22/30GR023': { password: 'password123', securityQuestion: 'What is your favorite color?', securityAnswer: 'blue', department: 'Computer', level: '300' } }
             };
 
             // --- Utility Functions ---
@@ -716,11 +728,12 @@
                     showStudentView(); // Default view on login is home feed
                 } else {
                     adminPanelLink.style.display = 'none';
-                    const matricNumber = userIdInput.value.trim();
-                    const level = matricNumber.substring(3, 5) * 10;
+                    const studentDetails = credentials.student[userId];
+                    const level = studentDetails.level;
                     userRoleDisplay.textContent = `Role: Student (${level}-level)`;
                     showStudentView();
                 }
+                renderDepartmentTabs();
             }
 
             function showStudentView() {
@@ -747,6 +760,39 @@
                 } else {
                     showStudentView();
                 }
+            }
+
+            function renderDepartmentTabs() {
+                departmentTabs.innerHTML = '';
+                let tabs = [{ name: 'All', value: 'All' }];
+                
+                if (userRole === 'student') {
+                    const studentId = userIdInput.value.trim();
+                    const studentDept = credentials.student[studentId].department;
+                    tabs.push({ name: studentDept, value: studentDept });
+                } else if (userRole === 'admin') {
+                    tabs = [
+                        { name: 'All', value: 'All' },
+                        { name: 'Agricultural and Bio Systems', value: 'Agricultural and Bio Systems' },
+                        { name: 'Water Resources and Environmental', value: 'Water Resources and Environmental' },
+                        { name: 'Chemical', value: 'Chemical' },
+                        { name: 'Food', value: 'Food' },
+                        { name: 'Computer', value: 'Computer' },
+                        { name: 'Electrical', value: 'Electrical' },
+                        { name: 'Civil', value: 'Civil' },
+                        { name: 'Mechanical', value: 'Mechanical' },
+                        { name: 'Biomedical', value: 'Biomedical' },
+                        { name: 'Material and Metallurgical', value: 'Material and Metallurgical' },
+                    ];
+                }
+
+                tabs.forEach((tab, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = `btn m-1 ${tab.value === currentDepartment ? 'active' : ''}`;
+                    btn.textContent = tab.name;
+                    btn.dataset.dept = tab.value;
+                    departmentTabs.appendChild(btn);
+                });
             }
 
             function updateNotificationBadge() {
@@ -867,17 +913,11 @@
                 const password = signupPasswordInput.value.trim();
                 const confirmPassword = confirmPasswordInput.value.trim();
                 const role = signupRoleSelect.value;
-                const securityQuestion = securityQuestionSelect.value;
-                const securityAnswer = securityAnswerInput.value.trim();
-                const adminRole = adminRoleSelect.value;
-                const adminLevel = adminLevelSelect.value;
-
-                if (!userId || !password || !confirmPassword || (role === 'student' && (!securityQuestion || !securityAnswer)) || (role === 'admin' && (!adminRole || !adminLevel))) {
-                    showAlert('Please fill in all fields.');
-                    return;
-                }
-
-                if (password !== confirmPassword) {
+                
+                let valid = true;
+                if (!userId || !password || !confirmPassword) {
+                    valid = false;
+                } else if (password !== confirmPassword) {
                     showAlert('Passwords do not match.');
                     return;
                 }
@@ -887,13 +927,29 @@
                     return;
                 }
 
-                credentials[role][userId] = { password };
                 if (role === 'student') {
-                    credentials[role][userId].securityQuestion = securityQuestion;
-                    credentials[role][userId].securityAnswer = securityAnswer;
+                    const studentDepartment = studentDepartmentSelect.value;
+                    const studentLevel = studentLevelSelect.value;
+                    const securityQuestion = securityQuestionSelect.value;
+                    const securityAnswer = securityAnswerInput.value.trim();
+                    if (!studentDepartment || !studentLevel || !securityQuestion || !securityAnswer) {
+                        valid = false;
+                    } else {
+                        credentials[role][userId] = { password, department: studentDepartment, level: studentLevel, securityQuestion, securityAnswer };
+                    }
                 } else if (role === 'admin') {
-                    credentials[role][userId].adminRole = adminRole;
-                    credentials[role][userId].adminLevel = adminLevel;
+                    const adminRole = adminRoleSelect.value;
+                    const adminLevel = adminLevelSelect.value;
+                    if (!adminRole || !adminLevel) {
+                        valid = false;
+                    } else {
+                        credentials[role][userId] = { password, adminRole, adminLevel };
+                    }
+                }
+
+                if (!valid) {
+                    showAlert('Please fill in all fields.');
+                    return;
                 }
 
                 showAlert('Account created successfully! You can now log in.');
@@ -1022,14 +1078,14 @@
 
             signupRoleSelect.addEventListener('change', (e) => {
                 if (e.target.value === 'student') {
-                    studentSecurityFields.style.display = 'block';
+                    studentSpecificFields.style.display = 'block';
                     adminSpecificFields.style.display = 'none';
                 } else if (e.target.value === 'admin') {
-                    studentSecurityFields.style.display = 'none';
+                    studentSpecificFields.style.display = 'none';
                     adminSpecificFields.style.display = 'block';
                 }
             });
-
+            
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 isLoggedIn = false;
                 userRole = '';
