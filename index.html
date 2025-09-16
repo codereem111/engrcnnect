@@ -1,1146 +1,1708 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>EngrConnect</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --primary-color: #3B82F6;
-            --secondary-color: #2563EB;
-            --text-primary: #1F2937;
-            --text-secondary: #6B7280;
-            --bg-light: #F3F4F6;
-            --card-light: #ffffff;
+      :root {
+        --primary-color: #3b82f6;
+        --secondary-color: #2563eb;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --bg-light: #f3f4f6;
+        --card-light: #ffffff;
 
-            --bg-dark: #1F2937;
-            --card-dark: #374151;
-            --text-dark: #D1D5DB;
-            --border-dark: #4B5563;
-        }
+        --bg-dark: #1f2937;
+        --card-dark: #374151;
+        --text-dark: #d1d5db;
+        --border-dark: #4b5563;
+      }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-light);
-            transition: background-color 0.3s ease;
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-light);
+        transition: background-color 0.3s ease;
+      }
 
-        .main-container {
-            display: flex;
-            min-height: 100vh;
-        }
+      .main-container {
+        display: flex;
+        min-height: 100vh;
+      }
 
+      .sidebar {
+        width: 280px;
+        background-color: var(--card-light);
+        padding: 2rem 1.5rem;
+        border-right: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease-in-out, background-color 0.3s ease,
+          border-right-color 0.3s ease;
+      }
+
+      .content-area {
+        flex-grow: 1;
+        padding: 2rem;
+      }
+
+      .login-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: var(--bg-light);
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .login-card {
+        background-color: var(--card-light);
+        border-radius: 1rem;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        max-width: 450px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+      }
+
+      .logo {
+        width: 150px;
+        height: auto;
+        margin-bottom: 2rem;
+      }
+
+      .sidebar-brand {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .sidebar-menu a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        transition: background-color 0.2s ease, color 0.2s ease;
+      }
+
+      .sidebar-menu a:hover,
+      .sidebar-menu a.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .sidebar-menu a.active .bi {
+        color: white;
+      }
+
+      .sidebar-menu a .bi {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        transition: color 0.2s ease;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .department-tabs .btn {
+        border: none;
+        background-color: transparent;
+        color: var(--text-secondary);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: color 0.2s ease;
+      }
+
+      .department-tabs .btn.active {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--primary-color);
+        font-weight: 600;
+      }
+
+      .notification-card {
+        background-color: var(--card-light);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        margin-bottom: 1.5rem;
+      }
+
+      .notification-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .badge-department {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.3em 0.8em;
+        border-radius: 50rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .btn-post,
+      .btn-login,
+      .btn-toggle {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        font-weight: 600;
+        border-radius: 0.75rem;
+        transition: background-color 0.2s ease;
+      }
+
+      .btn-post:hover,
+      .btn-login:hover,
+      .btn-toggle:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+
+      /* Dark Mode */
+      body.dark-mode {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+      }
+
+      .dark-mode .sidebar {
+        background-color: #2d3748;
+        border-right-color: #4b5563;
+      }
+
+      .dark-mode .login-container {
+        background-color: var(--bg-dark);
+      }
+
+      .dark-mode .login-card {
+        background-color: var(--card-dark);
+      }
+
+      .dark-mode .sidebar-brand,
+      .dark-mode h1,
+      .dark-mode h2,
+      .dark-mode h3,
+      .dark-mode h4,
+      .dark-mode h5 {
+        color: var(--text-dark);
+      }
+
+      .dark-mode .sidebar-menu a {
+        color: var(--text-secondary);
+      }
+
+      .dark-mode .sidebar-menu a:hover,
+      .dark-mode .sidebar-menu a.active {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      .dark-mode .sidebar-menu a .bi {
+        color: var(--text-secondary);
+      }
+
+      .dark-mode .top-bar,
+      .dark-mode .department-tabs .btn,
+      .dark-mode .notification-card,
+      .dark-mode #adminPanel {
+        background-color: var(--card-dark);
+        color: var(--text-dark);
+      }
+
+      .dark-mode .department-tabs .btn {
+        color: var(--text-dark);
+      }
+
+      .dark-mode .department-tabs .btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+      }
+
+      .dark-mode .notification-card {
+        background-color: var(--card-dark);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .dark-mode .text-muted {
+        color: var(--text-secondary) !important;
+      }
+
+      .dark-mode .form-control,
+      .dark-mode .form-select {
+        background-color: var(--border-dark);
+        border-color: #6b7280;
+        color: white;
+      }
+
+      /* Mobile-first responsiveness */
+      .hamburger-menu {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1000;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+      }
+
+      @media (max-width: 767.98px) {
         .sidebar {
-            width: 280px;
-            background-color: var(--card-light);
-            padding: 2rem 1.5rem;
-            border-right: 1px solid #E5E7EB;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease-in-out, background-color 0.3s ease, border-right-color 0.3s ease;
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100vh;
+          width: 250px;
+          transform: translateX(-100%);
+          transition: transform 0.3s ease-in-out;
+          z-index: 999;
         }
-
+        .sidebar.show {
+          transform: translateX(0);
+        }
+        .main-container {
+          flex-direction: column;
+        }
         .content-area {
-            flex-grow: 1;
-            padding: 2rem;
+          padding: 1rem;
+          padding-top: 4rem;
         }
-        
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: var(--bg-light);
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .login-card {
-            background-color: var(--card-light);
-            border-radius: 1rem;
-            padding: 2rem 1.5rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            max-width: 450px;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-        
-        .logo {
-            width: 150px;
-            height: auto;
-            margin-bottom: 2rem;
-        }
-        
-        .sidebar-brand {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .sidebar-menu a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .sidebar-menu a.active .bi {
-            color: white;
-        }
-
-        .sidebar-menu a .bi {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            transition: color 0.2s ease;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .department-tabs .btn {
-            border: none;
-            background-color: transparent;
-            color: var(--text-secondary);
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            transition: color 0.2s ease;
-        }
-
-        .department-tabs .btn.active {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            font-weight: 600;
-        }
-
-        .notification-card {
-            background-color: var(--card-light);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            margin-bottom: 1.5rem;
-        }
-
-        .notification-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .badge-department {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.3em 0.8em;
-            border-radius: 50rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .btn-post, .btn-login, .btn-toggle {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-            font-weight: 600;
-            border-radius: 0.75rem;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-post:hover, .btn-login:hover, .btn-toggle:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-
-        /* Dark Mode */
-        body.dark-mode {
-            background-color: var(--bg-dark);
-            color: var(--text-dark);
-        }
-
-        .dark-mode .sidebar {
-            background-color: #2D3748;
-            border-right-color: #4B5563;
-        }
-
-        .dark-mode .login-container {
-            background-color: var(--bg-dark);
-        }
-        
-        .dark-mode .login-card {
-            background-color: var(--card-dark);
-        }
-        
-        .dark-mode .sidebar-brand,
-        .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5 {
-            color: var(--text-dark);
-        }
-
-        .dark-mode .sidebar-menu a {
-            color: var(--text-secondary);
-        }
-        
-        .dark-mode .sidebar-menu a:hover, .dark-mode .sidebar-menu a.active {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        .dark-mode .sidebar-menu a .bi {
-            color: var(--text-secondary);
-        }
-        
-        .dark-mode .top-bar,
-        .dark-mode .department-tabs .btn,
-        .dark-mode .notification-card,
-        .dark-mode #adminPanel {
-            background-color: var(--card-dark);
-            color: var(--text-dark);
-        }
-
-        .dark-mode .department-tabs .btn {
-            color: var(--text-dark);
-        }
-        
-        .dark-mode .department-tabs .btn.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        .dark-mode .notification-card {
-            background-color: var(--card-dark);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-        
-        .dark-mode .text-muted {
-            color: var(--text-secondary) !important;
-        }
-
-        .dark-mode .form-control,
-        .dark-mode .form-select {
-            background-color: var(--border-dark);
-            border-color: #6B7280;
-            color: white;
-        }
-        
-        /* Mobile-first responsiveness */
         .hamburger-menu {
-            display: none;
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 1000;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
+          display: block;
         }
+        .logo {
+          width: 120px;
+        }
+        .login-card {
+          padding: 1.5rem 1rem;
+        }
+      }
 
-        @media (max-width: 767.98px) {
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                width: 250px;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
-                z-index: 999;
-            }
-            .sidebar.show {
-                transform: translateX(0);
-            }
-            .main-container {
-                flex-direction: column;
-            }
-            .content-area {
-                padding: 1rem;
-                padding-top: 4rem;
-            }
-            .hamburger-menu {
-                display: block;
-            }
-            .logo {
-                width: 120px;
-            }
-            .login-card {
-                padding: 1.5rem 1rem;
-            }
+      @media (min-width: 768px) and (max-width: 991.98px) {
+        .content-area {
+          padding: 1.5rem;
         }
-        
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .content-area {
-                padding: 1.5rem;
-            }
-            .sidebar {
-                width: 200px;
-                padding: 1.5rem;
-            }
-            .sidebar-brand {
-                font-size: 1.5rem;
-            }
-            .sidebar-menu a {
-                padding: 0.6rem 0.8rem;
-            }
-            .logo {
-                width: 130px;
-            }
+        .sidebar {
+          width: 200px;
+          padding: 1.5rem;
         }
-        
-        @media (min-width: 992px) {
-            .sidebar {
-                flex-shrink: 0;
-            }
-            .content-area {
-                padding: 2rem;
-            }
-            .logo {
-                width: 200px;
-            }
+        .sidebar-brand {
+          font-size: 1.5rem;
         }
+        .sidebar-menu a {
+          padding: 0.6rem 0.8rem;
+        }
+        .logo {
+          width: 130px;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .sidebar {
+          flex-shrink: 0;
+        }
+        .content-area {
+          padding: 2rem;
+        }
+        .logo {
+          width: 200px;
+        }
+      }
     </style>
-</head>
-<body>
-
-    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+  </head>
+  <body>
+    <div
+      class="modal fade"
+      id="alertModal"
+      tabindex="-1"
+      aria-labelledby="alertModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="alertModalLabel">Message</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-          <div class="modal-body" id="alertModalBody">
-            </div>
+          <div class="modal-body" id="alertModalBody"></div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
     </div>
-    
-    <div id="loginPage" class="login-container">
-        <div id="loginCard" class="login-card text-center">
-            <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4">
-            <p class="text-muted mb-4">Please sign in to continue to the dashboard.</p>
-            <form id="loginForm">
-                <div class="mb-3">
-                    <input type="text" class="form-control form-control-lg text-center" id="userIdInput" placeholder="Matric No. or Email">
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control form-control-lg text-center" id="passwordInput" placeholder="Password">
-                </div>
-                <div class="mb-2">
-                    <select class="form-select form-select-lg text-center" id="roleSelect">
-                        <option value="student">Student</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <div class="d-flex justify-content-end mb-4">
-                    <a href="#" id="forgotPasswordBtn" class="text-muted text-decoration-none" style="font-size: 0.9em;">Forgot Password?</a>
-                </div>
-                <button type="submit" class="btn btn-login btn-lg w-100 fw-bold">Sign In</button>
-            </form>
-            <div class="mt-3">
-                <small class="text-muted">Don't have an account? <a href="#" id="toggleToSignupBtn">Sign up</a></small>
-            </div>
+
+    <div
+      class="modal fade"
+      id="notificationModal"
+      tabindex="-1"
+      aria-labelledby="notificationModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="notificationModalLabel">
+              New Notification
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h5 class="fw-bold" id="notificationTitle"></h5>
+            <p class="text-muted mb-2">
+              <span class="badge-department" id="notificationDept"></span>
+            </p>
+            <p id="notificationBody"></p>
+            <p class="mt-2 mb-0">
+              <small class="text-muted fst-italic"
+                >Posted by: <span id="notificationPoster"></span
+              ></small>
+            </p>
+            <p id="notificationExpires" class="mt-2 mb-0" style="display: none">
+              <small class="text-danger fw-bold"></small>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
         </div>
-
-        <div id="signupCard" class="login-card text-center" style="display: none;">
-            <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4">
-            <p class="text-muted mb-4">Create your account to get started.</p>
-            <form id="signupForm">
-                <div class="mb-3">
-                    <input type="text" class="form-control form-control-lg text-center" id="signupUserIdInput" placeholder="Matric No. or Email">
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control form-control-lg text-center" id="signupPasswordInput" placeholder="Password">
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control form-control-lg text-center" id="confirmPasswordInput" placeholder="Confirm Password">
-                </div>
-
-                <div id="adminSpecificFields" class="mb-3" style="display: none;">
-                    <div class="mb-2">
-                        <select class="form-select text-center" id="adminRoleSelect">
-                            <option value="" disabled selected>Select Admin Role</option>
-                            <option value="Level Adviser">Level Adviser</option>
-                            <option value="HOD">HOD</option>
-                            <option value="Faculty Officer">Faculty Officer</option>
-                            <option value="Lecturer">Lecturer</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <select class="form-select text-center" id="adminLevelSelect">
-                            <option value="" disabled selected>Select Level</option>
-                            <option value="All">All Levels</option>
-                            <option value="100">100-level</option>
-                            <option value="200">200-level</option>
-                            <option value="300">300-level</option>
-                            <option value="400">400-level</option>
-                            <option value="500">500-level</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="studentSpecificFields" class="mb-3">
-                    <div class="mb-2">
-                        <select class="form-select text-center" id="studentDepartmentSelect">
-                            <option value="" disabled selected>Select Department</option>
-                            <option value="Agricultural and Bio Systems">Agricultural and Bio Systems Engineering</option>
-                            <option value="Water Resources and Environmental">Water Resources and Environmental Engineering</option>
-                            <option value="Chemical">Chemical Engineering</option>
-                            <option value="Food">Food Engineering</option>
-                            <option value="Computer">Computer Engineering</option>
-                            <option value="Electrical">Electrical Engineering</option>
-                            <option value="Civil">Civil Engineering</option>
-                            <option value="Mechanical">Mechanical Engineering</option>
-                            <option value="Biomedical">Biomedical Engineering</option>
-                            <option value="Material and Metallurgical">Material and Metallurgical Engineering</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <select class="form-select text-center" id="studentLevelSelect">
-                            <option value="" disabled selected>Select Level</option>
-                            <option value="100">100-level</option>
-                            <option value="200">200-level</option>
-                            <option value="300">300-level</option>
-                            <option value="400">400-level</option>
-                            <option value="500">500-level</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <select class="form-select text-center" id="securityQuestionSelect">
-                            <option value="" disabled selected>Select a Security Question</option>
-                            <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
-                            <option value="What was the name of your first pet?">What was the name of your first pet?</option>
-                            <option value="What is your favorite color?">What is your favorite color?</option>
-                        </select>
-                    </div>
-                    <input type="text" class="form-control text-center" id="securityAnswerInput" placeholder="Your Answer">
-                </div>
-
-                <div class="mb-4">
-                    <select class="form-select form-select-lg text-center" id="signupRoleSelect">
-                        <option value="student">Student</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-login btn-lg w-100 fw-bold">Sign Up</button>
-            </form>
-            <div class="mt-3">
-                <small class="text-muted">Already have an account? <a href="#" id="toggleToLoginBtn">Sign in</a></small>
-            </div>
-        </div>
-
-        <div id="forgotPasswordCard" class="login-card text-center" style="display: none;">
-            <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4">
-            <h5 class="fw-bold mb-3">Password Recovery</h5>
-            <p class="text-muted mb-4" id="forgotPasswordPrompt">Enter your details to reset your password.</p>
-            <form id="forgotPasswordForm">
-                <div class="mb-3" id="forgotUserIdDiv">
-                    <input type="text" class="form-control form-control-lg text-center" id="forgotUserIdInput" placeholder="Matric No. or Email">
-                </div>
-                <div id="securityQuestionDiv" style="display: none;">
-                    <div class="mb-3">
-                        <small id="securityQuestionDisplay" class="d-block mb-2 text-muted"></small>
-                        <input type="text" class="form-control text-center" id="securityAnswerVerifyInput" placeholder="Your Answer">
-                    </div>
-                </div>
-                <div id="newPasswordDiv" style="display: none;">
-                    <div class="mb-3">
-                        <input type="password" class="form-control text-center" id="newPasswordInput" placeholder="New Password">
-                    </div>
-                    <div class="mb-3">
-                        <input type="password" class="form-control text-center" id="newPasswordConfirmInput" placeholder="Confirm New Password">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-login btn-lg w-100 fw-bold" id="forgotPasswordSubmitBtn">Continue</button>
-            </form>
-            <div class="mt-3">
-                <small class="text-muted"><a href="#" id="forgotToLoginBtn">Back to Sign In</a></small>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <div id="mainDashboard" class="main-container" style="display: none;">
-        <button id="hamburgerBtn" class="hamburger-menu">
-            <i class="bi bi-list fs-4"></i>
-        </button>
-        <aside class="sidebar">
-            <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4">
-            
-            <ul class="sidebar-menu list-unstyled">
-                <li>
-                    <a href="#" class="d-flex align-items-center mb-2 active" id="homeLink">
-                        <i class="bi bi-house-door-fill me-2"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-                <li id="adminPanelLink" style="display: none;">
-                    <a href="#" id="toggleAdminBtn" class="d-flex align-items-center mb-2">
-                        <i class="bi bi-person-gear me-2"></i>
-                        <span>Admin Panel</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="darkModeToggle" class="d-flex align-items-center mb-2">
-                        <i class="bi bi-moon-fill me-2"></i>
-                        <span>Dark Mode</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="logoutBtn" class="d-flex align-items-center">
-                        <i class="bi bi-box-arrow-right me-2"></i>
-                        <span>Log Out</span>
-                    </a>
-                </li>
-            </ul>
+    <div id="loginPage" class="login-container">
+      <div id="loginCard" class="login-card text-center">
+        <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4" />
+        <p class="text-muted mb-4">
+          Please sign in to continue to the dashboard.
+        </p>
+        <form id="loginForm">
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control form-control-lg text-center"
+              id="userIdInput"
+              placeholder="Matric No. or Email"
+            />
+          </div>
+          <div class="mb-3 position-relative">
+            <input
+              type="password"
+              class="form-control form-control-lg text-center"
+              id="passwordInput"
+              placeholder="Password"
+            />
+            <span
+              class="position-absolute top-50 end-0 translate-middle-y me-3"
+              style="cursor: pointer"
+            >
+              <i class="bi bi-eye-slash-fill text-muted"></i>
+            </span>
+          </div>
+          <div class="mb-2">
+            <select
+              class="form-select form-select-lg text-center"
+              id="roleSelect"
+            >
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div id="studentLoginLevel" class="mb-2">
+            <select
+              class="form-select form-select-lg text-center"
+              id="studentLoginLevelSelect"
+            >
+              <option value="" disabled selected>Select Level</option>
+              <option value="100">100-level</option>
+              <option value="200">200-level</option>
+              <option value="300">300-level</option>
+              <option value="400">400-level</option>
+              <option value="500">500-level</option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-end mb-4">
+            <a
+              href="#"
+              id="forgotPasswordBtn"
+              class="text-muted text-decoration-none"
+              style="font-size: 0.9em"
+              >Forgot Password?</a
+            >
+          </div>
+          <button type="submit" class="btn btn-login btn-lg w-100 fw-bold">
+            Sign In
+          </button>
+        </form>
+        <div class="mt-3">
+          <small class="text-muted"
+            >Don't have an account?
+            <a href="#" id="toggleToSignupBtn">Sign up</a></small
+          >
+        </div>
+      </div>
 
-            <div class="mt-auto pt-4 border-top">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-person-circle fs-3 me-2"></i>
-                    <div>
-                        <div class="fw-bold" id="userRoleDisplay"></div>
-                        <small class="text-muted">Active</small>
-                    </div>
-                </div>
+      <div id="signupCard" class="login-card text-center" style="display: none">
+        <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4" />
+        <p class="text-muted mb-4">Create your account to get started.</p>
+        <form id="signupForm">
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control form-control-lg text-center"
+              id="signupUserIdInput"
+              placeholder="Matric No. or Email"
+            />
+          </div>
+          <div class="mb-3 position-relative">
+            <input
+              type="password"
+              class="form-control form-control-lg text-center"
+              id="signupPasswordInput"
+              placeholder="Password"
+            />
+            <span
+              class="position-absolute top-50 end-0 translate-middle-y me-3"
+              style="cursor: pointer"
+            >
+              <i class="bi bi-eye-slash-fill text-muted"></i>
+            </span>
+          </div>
+          <div class="mb-3 position-relative">
+            <input
+              type="password"
+              class="form-control form-control-lg text-center"
+              id="confirmPasswordInput"
+              placeholder="Confirm Password"
+            />
+            <span
+              class="position-absolute top-50 end-0 translate-middle-y me-3"
+              style="cursor: pointer"
+            >
+              <i class="bi bi-eye-slash-fill text-muted"></i>
+            </span>
+          </div>
+
+          <div id="adminSpecificFields" class="mb-3" style="display: none">
+            <div class="mb-2">
+              <select class="form-select text-center" id="adminRoleSelect">
+                <option value="" disabled selected>Select Admin Role</option>
+                <option value="Level Adviser">Level Adviser</option>
+                <option value="HOD">HOD</option>
+                <option value="Faculty Officer">Faculty Officer</option>
+                <option value="Lecturer">Lecturer</option>
+                <option value="Associate Professor">Associate Professor</option>
+              </select>
             </div>
-        </aside>
-
-        <main class="content-area">
-            <header class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="h3 fw-bold">Notifications</h2>
-                <div class="d-flex align-items-center gap-3">
-                    <div class="notification-icon-container">
-                        <i class="bi bi-bell-fill fs-4 text-secondary"></i>
-                        <span id="notificationBadge" class="badge bg-danger rounded-pill notification-badge" style="display: none;">0</span>
-                    </div>
-                </div>
-            </header>
-            
-            <div id="adminPanel" class="p-4 rounded-3 shadow-sm mb-4" style="display: none; background-color: var(--card-light);">
-                <h2 class="h5 mb-4 fw-bold">Admin Panel</h2>
-
-                <div class="mb-4 pb-4 border-bottom">
-                    <h3 class="h6 fw-bold">Switch Admin Role</h3>
-                    <div class="row g-2 mb-2">
-                        <div class="col-md-6">
-                            <select class="form-select" id="switchAdminRoleSelect">
-                                <option value="Level Adviser">Level Adviser</option>
-                                <option value="HOD">HOD</option>
-                                <option value="Faculty Officer">Faculty Officer</option>
-                                <option value="Lecturer">Lecturer</option>
-                                <option value="Faculty President">Faculty President</option>
-                                <option value="Dean">Dean</option>
-                                <option value="Sub-Dean">Sub-Dean</option>
-                                <option value="Faculty PRO">Faculty PRO</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <select class="form-select" id="switchAdminLevelSelect">
-                                <option value="All">All Levels</option>
-                                <option value="100">100-level</option>
-                                <option value="200">200-level</option>
-                                <option value="300">300-level</option>
-                                <option value="400">400-level</option>
-                                <option value="500">500-level</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button id="switchRoleBtn" class="btn btn-primary w-100 fw-bold">Update Role</button>
-                </div>
-
-                <h3 class="h6 mb-4 fw-bold">Post New Notification</h3>
-                <form id="postForm">
-                    <div class="mb-3">
-                        <label for="postTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="postTitle" placeholder="e.g., Test Tomorrow">
-                    </div>
-                    <div class="mb-3">
-                        <label for="postBody" class="form-label">Body</label>
-                        <textarea class="form-control" id="postBody" rows="4" placeholder="e.g., Thermodynamics class is cancelled today."></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="postDepartment" class="form-label">Department</label>
-                        <select class="form-select" id="postDepartment">
-                            <option value="All">All Departments</option>
-                            <option value="Agricultural and Bio Systems">Agricultural and Bio Systems</option>
-                            <option value="Water Resources and Environmental">Water Resources and Environmental</option>
-                            <option value="Chemical">Chemical</option>
-                            <option value="Food">Food</option>
-                            <option value="Computer">Computer</option>
-                            <option value="Electrical">Electrical</option>
-                            <option value="Civil">Civil</option>
-                            <option value="Mechanical">Mechanical</option>
-                            <option value="Biomedical">Biomedical</option>
-                            <option value="Material and Metallurgical">Material and Metallurgical</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="postExpirationDate" class="form-label">Expiration Date</label>
-                        <input type="date" class="form-control" id="postExpirationDate">
-                    </div>
-                    <button type="submit" class="btn btn-post w-100 fw-bold">Post Notification</button>
-                </form>
+            <div class="mb-2">
+              <select class="form-select text-center" id="adminLevelSelect">
+                <option value="" disabled selected>Select Level</option>
+                <option value="All">All Levels</option>
+                <option value="100">100-level</option>
+                <option value="200">200-level</option>
+                <option value="300">300-level</option>
+                <option value="400">400-level</option>
+                <option value="500">500-level</option>
+              </select>
             </div>
-            
-            <div id="departmentTabs" class="department-tabs d-flex justify-content-start flex-wrap mb-4">
-                </div>
-            
-            <div id="notificationList">
-                <div class="text-center text-muted p-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-3">Loading notifications...</p>
-                </div>
+          </div>
+
+          <div id="studentSpecificFields" class="mb-3">
+            <div class="mb-2">
+              <select class="form-select text-center" id="signupStudentDepartmentSelect">
+                <option value="" disabled selected>Select Department</option>
+                <option value="Agricultural and Bio Systems Engineering">
+                  Agricultural and Bio Systems Engineering
+                </option>
+                <option value="Water Resources and Environmental Engineering">
+                  Water Resources and Environmental Engineering
+                </option>
+                <option value="Chemical Engineering">
+                  Chemical Engineering
+                </option>
+                <option value="Food Engineering">Food Engineering</option>
+                <option value="Computer Engineering">
+                  Computer Engineering
+                </option>
+                <option value="Electrical Engineering">
+                  Electrical Engineering
+                </option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Mechanical Engineering">
+                  Mechanical Engineering
+                </option>
+                <option value="Biomedical Engineering">
+                  Biomedical Engineering
+                </option>
+                <option value="Material and Metallurgical Engineering">
+                  Material and Metallurgical Engineering
+                </option>
+              </select>
             </div>
-        </main>
+            <div class="mb-2">
+              <select
+                class="form-select text-center"
+                id="securityQuestionSelect"
+              >
+                <option value="" disabled selected>
+                  Select a Security Question
+                </option>
+                <option value="What is your mother's maiden name?">
+                  What is your mother's maiden name?
+                </option>
+                <option value="What was the name of your first pet?">
+                  What was the name of your first pet?
+                </option>
+                <option value="What is your favorite color?">
+                  What is your favorite color?
+                </option>
+              </select>
+            </div>
+            <input
+              type="text"
+              class="form-control text-center"
+              id="securityAnswerInput"
+              placeholder="Your Answer"
+            />
+          </div>
+
+          <div class="mb-4">
+            <select
+              class="form-select form-select-lg text-center"
+              id="signupRoleSelect"
+            >
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-login btn-lg w-100 fw-bold">
+            Sign Up
+          </button>
+        </form>
+        <div class="mt-3">
+          <small class="text-muted"
+            >Already have an account?
+            <a href="#" id="toggleToLoginBtn">Sign in</a></small
+          >
+        </div>
+      </div>
+
+      <div
+        id="forgotPasswordCard"
+        class="login-card text-center"
+        style="display: none"
+      >
+        <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4" />
+        <h5 class="fw-bold mb-3">Password Recovery</h5>
+        <p class="text-muted mb-4" id="forgotPasswordPrompt">
+          Enter your details to reset your password.
+        </p>
+        <form id="forgotPasswordForm">
+          <div class="mb-3" id="forgotUserIdDiv">
+            <input
+              type="text"
+              class="form-control form-control-lg text-center"
+              id="forgotUserIdInput"
+              placeholder="Matric No. or Email"
+            />
+          </div>
+          <div id="securityQuestionDiv" style="display: none">
+            <div class="mb-3">
+              <small
+                id="securityQuestionDisplay"
+                class="d-block mb-2 text-muted"
+              ></small>
+              <input
+                type="text"
+                class="form-control text-center"
+                id="securityAnswerVerifyInput"
+                placeholder="Your Answer"
+              />
+            </div>
+          </div>
+          <div id="newPasswordDiv" style="display: none">
+            <div class="mb-3 position-relative">
+              <input
+                type="password"
+                class="form-control text-center"
+                id="newPasswordInput"
+                placeholder="New Password"
+              />
+              <span
+                class="position-absolute top-50 end-0 translate-middle-y me-3"
+                style="cursor: pointer"
+              >
+                <i class="bi bi-eye-slash-fill text-muted"></i>
+              </span>
+            </div>
+            <div class="mb-3 position-relative">
+              <input
+                type="password"
+                class="form-control text-center"
+                id="newPasswordConfirmInput"
+                placeholder="Confirm New Password"
+              />
+              <span
+                class="position-absolute top-50 end-0 translate-middle-y me-3"
+                style="cursor: pointer"
+              >
+                <i class="bi bi-eye-slash-fill text-muted"></i>
+              </span>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-login btn-lg w-100 fw-bold"
+            id="forgotPasswordSubmitBtn"
+          >
+            Continue
+          </button>
+        </form>
+        <div class="mt-3">
+          <small class="text-muted"
+            ><a href="#" id="forgotToLoginBtn">Back to Sign In</a></small
+          >
+        </div>
+      </div>
+    </div>
+
+    <div id="mainDashboard" class="main-container" style="display: none">
+      <button id="hamburgerBtn" class="hamburger-menu">
+        <i class="bi bi-list fs-4"></i>
+      </button>
+      <aside class="sidebar">
+        <img src="Logo.png" alt="EngrConnect Logo" class="logo mb-4" />
+
+        <ul class="sidebar-menu list-unstyled">
+          <li>
+            <a
+              href="#"
+              class="d-flex align-items-center mb-2 active"
+              id="homeLink"
+            >
+              <i class="bi bi-house-door-fill me-2"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li id="adminPanelLink" style="display: none">
+            <a
+              href="#"
+              id="toggleAdminBtn"
+              class="d-flex align-items-center mb-2"
+            >
+              <i class="bi bi-person-gear me-2"></i>
+              <span>Admin Panel</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              id="darkModeToggle"
+              class="d-flex align-items-center mb-2"
+            >
+              <i class="bi bi-moon-fill me-2"></i>
+              <span>Dark Mode</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" id="logoutBtn" class="d-flex align-items-center">
+              <i class="bi bi-box-arrow-right me-2"></i>
+              <span>Log Out</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="mt-auto pt-4 border-top">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-person-circle fs-3 me-2"></i>
+            <div>
+              <div class="fw-bold" id="userRoleDisplay"></div>
+              <small class="text-muted">Active</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content-area">
+        <header class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="h3 fw-bold">Notifications</h2>
+          <div class="d-flex align-items-center gap-3">
+            <div class="notification-icon-container" id="notificationIcon">
+              <i class="bi bi-bell-fill fs-4 text-secondary"></i>
+              <span
+                id="notificationBadge"
+                class="badge bg-danger rounded-pill notification-badge"
+                style="display: none"
+                >0</span
+              >
+            </div>
+          </div>
+        </header>
+
+        <div
+          id="adminPanel"
+          class="p-4 rounded-3 shadow-sm mb-4"
+          style="display: none; background-color: var(--card-light)"
+        >
+          <h2 class="h5 mb-4 fw-bold">Admin Panel</h2>
+
+          <div class="mb-4 pb-4 border-bottom">
+            <h3 class="h6 fw-bold">Switch Admin Role</h3>
+            <div class="row g-2 mb-2">
+              <div class="col-md-6">
+                <select class="form-select" id="switchAdminRoleSelect">
+                  <option value="HOD">HOD</option>
+                  <option value="Level Adviser">Level Adviser</option>
+                  <option value="Faculty Officer">Faculty Officer</option>
+                  <option value="Dean">Dean</option>
+                  <option value="Sub-Dean">Sub-Dean</option>
+                  <option value="Faculty President">Faculty President</option>
+                  <option value="Faculty PRO">Faculty PRO</option>
+                  <option value="Lecturer">Lecturer</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <select class="form-select" id="switchAdminLevelSelect">
+                  <option value="All">All Levels</option>
+                  <option value="100">100-level</option>
+                  <option value="200">200-level</option>
+                  <option value="300">300-level</option>
+                  <option value="400">400-level</option>
+                  <option value="500">500-level</option>
+                </select>
+              </div>
+            </div>
+            <button id="switchRoleBtn" class="btn btn-primary w-100 fw-bold">
+              Update Role
+            </button>
+          </div>
+
+          <h3 class="h6 mb-4 fw-bold">Post New Notification</h3>
+          <form id="postForm">
+            <div class="mb-3">
+              <label for="postTitle" class="form-label">Title</label>
+              <input
+                type="text"
+                class="form-control"
+                id="postTitle"
+                placeholder="e.g., Test Tomorrow"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="postBody" class="form-label">Body</label>
+              <textarea
+                class="form-control"
+                id="postBody"
+                rows="4"
+                placeholder="e.g., Thermodynamics class is cancelled today."
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="postDepartment" class="form-label">Department</label>
+              <select class="form-select" id="postDepartment">
+                <option value="All Department">All Department</option>
+                <option value="Agricultural and Bio Systems Engineering">
+                  Agricultural and Bio Systems Engineering
+                </option>
+                <option value="Water Resources and Environmental Engineering">
+                  Water Resources and Environmental Engineering
+                </option>
+                <option value="Chemical Engineering">
+                  Chemical Engineering
+                </option>
+                <option value="Food Engineering">Food Engineering</option>
+                <option value="Computer Engineering">
+                  Computer Engineering
+                </option>
+                <option value="Electrical Engineering">
+                  Electrical Engineering
+                </option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Mechanical Engineering">
+                  Mechanical Engineering
+                </option>
+                <option value="Biomedical Engineering">
+                  Biomedical Engineering
+                </option>
+                <option value="Material and Metallurgical Engineering">
+                  Material and Metallurgical Engineering
+                </option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="postExpirationDate" class="form-label"
+                >Expiration Date</label
+              >
+              <input type="date" class="form-control" id="postExpirationDate" />
+            </div>
+            <button type="submit" class="btn btn-post w-100 fw-bold">
+              Post Notification
+            </button>
+          </form>
+        </div>
+
+        <div
+          id="departmentTabs"
+          class="department-tabs d-flex justify-content-start flex-wrap mb-4"
+        >
+          <button class="btn m-1 active" data-dept="All">All</button>
+          <button
+            class="btn m-1"
+            data-dept="Agricultural and Bio Systems Engineering"
+          >
+            Agricultural and Bio Systems Engineering
+          </button>
+          <button
+            class="btn m-1"
+            data-dept="Water Resources and Environmental Engineering"
+          >
+            Water Resources and Environmental Engineering
+          </button>
+          <button class="btn m-1" data-dept="Chemical Engineering">
+            Chemical Engineering
+          </button>
+          <button class="btn m-1" data-dept="Food Engineering">
+            Food Engineering
+          </button>
+          <button class="btn m-1" data-dept="Computer Engineering">
+            Computer Engineering
+          </button>
+          <button class="btn m-1" data-dept="Electrical Engineering">
+            Electrical Engineering
+          </button>
+          <button class="btn m-1" data-dept="Civil Engineering">
+            Civil Engineering
+          </button>
+          <button class="btn m-1" data-dept="Mechanical Engineering">
+            Mechanical Engineering
+          </button>
+          <button class="btn m-1" data-dept="Biomedical Engineering">
+            Biomedical Engineering
+          </button>
+          <button
+            class="btn m-1"
+            data-dept="Material and Metallurgical Engineering"
+          >
+            Material and Metallurgical Engineering
+          </button>
+        </div>
+
+        <div id="notificationList">
+          <div class="text-center text-muted p-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading notifications...</p>
+          </div>
+        </div>
+      </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- UI Elements ---
-            const loginPage = document.getElementById('loginPage');
-            const mainDashboard = document.getElementById('mainDashboard');
-            const loginCard = document.getElementById('loginCard');
-            const signupCard = document.getElementById('signupCard');
-            const forgotPasswordCard = document.getElementById('forgotPasswordCard');
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-            const userIdInput = document.getElementById('userIdInput');
-            const passwordInput = document.getElementById('passwordInput');
-            const roleSelect = document.getElementById('roleSelect');
-            const signupUserIdInput = document.getElementById('signupUserIdInput');
-            const signupPasswordInput = document.getElementById('signupPasswordInput');
-            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-            const signupRoleSelect = document.getElementById('signupRoleSelect');
-            const toggleToSignupBtn = document.getElementById('toggleToSignupBtn');
-            const toggleToLoginBtn = document.getElementById('toggleToLoginBtn');
-            const forgotToLoginBtn = document.getElementById('forgotToLoginBtn');
-            const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
-            const forgotUserIdInput = document.getElementById('forgotUserIdInput');
-            const forgotUserIdDiv = document.getElementById('forgotUserIdDiv');
-            const securityQuestionDiv = document.getElementById('securityQuestionDiv');
-            const securityQuestionSelect = document.getElementById('securityQuestionSelect');
-            const securityAnswerInput = document.getElementById('securityAnswerInput');
-            const securityQuestionDisplay = document.getElementById('securityQuestionDisplay');
-            const securityAnswerVerifyInput = document.getElementById('securityAnswerVerifyInput');
-            const newPasswordDiv = document.getElementById('newPasswordDiv');
-            const newPasswordInput = document.getElementById('newPasswordInput');
-            const newPasswordConfirmInput = document.getElementById('newPasswordConfirmInput');
-            const forgotPasswordSubmitBtn = document.getElementById('forgotPasswordSubmitBtn');
-            const forgotPasswordPrompt = document.getElementById('forgotPasswordPrompt');
-            const studentDepartmentSelect = document.getElementById('studentDepartmentSelect');
-            const studentLevelSelect = document.getElementById('studentLevelSelect');
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- UI Elements ---
+        const loginPage = document.getElementById("loginPage");
+        const mainDashboard = document.getElementById("mainDashboard");
+        const loginCard = document.getElementById("loginCard");
+        const signupCard = document.getElementById("signupCard");
+        const forgotPasswordCard = document.getElementById("forgotPasswordCard");
+        const loginForm = document.getElementById("loginForm");
+        const signupForm = document.getElementById("signupForm");
+        const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+        const userIdInput = document.getElementById("userIdInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const roleSelect = document.getElementById("roleSelect");
+        const signupUserIdInput = document.getElementById("signupUserIdInput");
+        const signupPasswordInput = document.getElementById("signupPasswordInput");
+        const confirmPasswordInput = document.getElementById("confirmPasswordInput");
+        const signupRoleSelect = document.getElementById("signupRoleSelect");
+        const toggleToSignupBtn = document.getElementById("toggleToSignupBtn");
+        const toggleToLoginBtn = document.getElementById("toggleToLoginBtn");
+        const forgotToLoginBtn = document.getElementById("forgotToLoginBtn");
+        const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
+        const forgotUserIdInput = document.getElementById("forgotUserIdInput");
+        const forgotUserIdDiv = document.getElementById("forgotUserIdDiv");
+        const securityQuestionDiv = document.getElementById("securityQuestionDiv");
+        const securityQuestionSelect = document.getElementById("securityQuestionSelect");
+        const securityAnswerInput = document.getElementById("securityAnswerInput");
+        const securityQuestionDisplay = document.getElementById("securityQuestionDisplay");
+        const securityAnswerVerifyInput = document.getElementById("securityAnswerVerifyInput");
+        const newPasswordDiv = document.getElementById("newPasswordDiv");
+        const newPasswordInput = document.getElementById("newPasswordInput");
+        const newPasswordConfirmInput = document.getElementById("newPasswordConfirmInput");
+        const forgotPasswordSubmitBtn = document.getElementById("forgotPasswordSubmitBtn");
+        const forgotPasswordPrompt = document.getElementById("forgotPasswordPrompt");
+        const studentLoginLevel = document.getElementById("studentLoginLevel");
+        const studentLoginLevelSelect = document.getElementById("studentLoginLevelSelect");
+        const notificationList = document.getElementById("notificationList");
+        const departmentTabs = document.getElementById("departmentTabs");
+        const departmentButtons = document.querySelectorAll("#departmentTabs .btn");
+        const toggleAdminBtn = document.getElementById("toggleAdminBtn");
+        const adminPanel = document.getElementById("adminPanel");
+        const postForm = document.getElementById("postForm");
+        const darkModeToggle = document.getElementById("darkModeToggle");
+        const notificationBadge = document.getElementById("notificationBadge");
+        const homeLink = document.getElementById("homeLink");
+        const adminPanelLink = document.getElementById("adminPanelLink");
+        const userRoleDisplay = document.getElementById("userRoleDisplay");
+        const sidebar = document.querySelector(".sidebar");
+        const hamburgerBtn = document.getElementById("hamburgerBtn");
+        const studentSpecificFields = document.getElementById("studentSpecificFields");
+        const signupStudentDepartmentSelect = document.getElementById("signupStudentDepartmentSelect");
+        const adminSpecificFields = document.getElementById("adminSpecificFields");
+        const adminRoleSelect = document.getElementById("adminRoleSelect");
+        const adminLevelSelect = document.getElementById("adminLevelSelect");
+        const switchRoleBtn = document.getElementById("switchRoleBtn");
+        const switchAdminRoleSelect = document.getElementById("switchAdminRoleSelect");
+        const switchAdminLevelSelect = document.getElementById("switchAdminLevelSelect");
+        const notificationIcon = document.getElementById("notificationIcon");
+        const notificationModal = new bootstrap.Modal(document.getElementById("notificationModal"));
+        const notificationTitle = document.getElementById("notificationTitle");
+        const notificationBody = document.getElementById("notificationBody");
+        const notificationDept = document.getElementById("notificationDept");
+        const notificationPoster = document.getElementById("notificationPoster");
+        const notificationExpires = document.getElementById("notificationExpires");
 
-            const notificationList = document.getElementById('notificationList');
-            const departmentTabs = document.getElementById('departmentTabs');
-            const toggleAdminBtn = document.getElementById('toggleAdminBtn');
-            const adminPanel = document.getElementById('adminPanel');
-            const postForm = document.getElementById('postForm');
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const notificationBadge = document.getElementById('notificationBadge');
-            const homeLink = document.getElementById('homeLink');
-            const adminPanelLink = document.getElementById('adminPanelLink');
-            const userRoleDisplay = document.getElementById('userRoleDisplay');
-            const sidebar = document.querySelector('.sidebar');
-            const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const studentSpecificFields = document.getElementById('studentSpecificFields');
-            const adminSpecificFields = document.getElementById('adminSpecificFields');
-            const adminRoleSelect = document.getElementById('adminRoleSelect');
-            const adminLevelSelect = document.getElementById('adminLevelSelect');
-            const switchRoleBtn = document.getElementById('switchRoleBtn');
-            const switchAdminRoleSelect = document.getElementById('switchAdminRoleSelect');
-            const switchAdminLevelSelect = document.getElementById('switchAdminLevelSelect');
+        // --- State Variables ---
+        let userRole = "";
+        let isLoggedIn = false;
+        let allNotifications = [];
+        let currentDepartment = "All";
+        let userDepartment = "";
+        let recoveryUser = null;
 
-            // --- State Variables ---
-            let userRole = '';
-            let isLoggedIn = false;
-            let allNotifications = [];
-            let currentDepartment = 'All';
-            let recoveryUser = null;
+        // --- Hardcoded Credentials for Demo ---
+        const credentials = {
+          admin: {
+            "admin@engrconnect.edu": {
+              password: "password123",
+              adminRole: "HOD",
+              adminLevel: "All",
+            },
+            "prof.johnson@engrconnect.edu": {
+              password: "pass123",
+              adminRole: "Associate Professor",
+              adminLevel: "400",
+            },
+            "leveladviser@engrconnect.edu": {
+              password: "password123",
+              adminRole: "Level Adviser",
+              adminLevel: "300",
+            },
+          },
+          student: {
+            "22/30GR023": {
+              password: "password123",
+              securityQuestion: "What is your favorite color?",
+              securityAnswer: "blue",
+              level: "300",
+              department: "Computer Engineering",
+            },
+            "21/50GR045": {
+              password: "password123",
+              securityQuestion: "What is your mother's maiden name?",
+              securityAnswer: "adebayo",
+              level: "400",
+              department: "Civil Engineering",
+            },
+            "23/60GR011": {
+                password: "password123",
+                securityQuestion: "What was the name of your first pet?",
+                securityAnswer: "max",
+                level: "200",
+                department: "Electrical Engineering",
+            },
+          },
+        };
 
-            // --- Hardcoded Credentials for Demo ---
-            const credentials = {
-                'admin': { 'admin@engrconnect.edu': { password: 'password123', adminRole: 'HOD', adminLevel: 'All' } },
-                'student': { '22/30GR023': { password: 'password123', securityQuestion: 'What is your favorite color?', securityAnswer: 'blue', department: 'Computer', level: '300' } }
-            };
+        // --- Utility Functions ---
+        const showAlert = (message) => {
+          const alertModal = new bootstrap.Modal(document.getElementById("alertModal"));
+          document.getElementById("alertModalBody").textContent = message;
+          alertModal.show();
+        };
 
-            // --- Utility Functions ---
-            const showAlert = (message) => {
-                const alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
-                document.getElementById('alertModalBody').textContent = message;
-                alertModal.show();
-            };
+        const togglePasswordVisibility = (inputElement, iconElement) => {
+          const isPassword = inputElement.type === "password";
+          inputElement.type = isPassword ? "text" : "password";
+          iconElement.classList.toggle("bi-eye-fill", isPassword);
+          iconElement.classList.toggle("bi-eye-slash-fill", !isPassword);
+        };
 
-            // --- View Rendering Functions ---
-            function renderApp() {
-                if (isLoggedIn) {
-                    loginPage.style.display = 'none';
-                    mainDashboard.style.display = 'flex';
-                    renderBasedOnRole();
-                    fetchNotifications();
-                } else {
-                    loginPage.style.display = 'flex';
-                    mainDashboard.style.display = 'none';
-                    loginCard.style.display = 'block';
-                    signupCard.style.display = 'none';
-                    forgotPasswordCard.style.display = 'none';
-                }
+        // --- View Rendering Functions ---
+        function renderApp() {
+          if (isLoggedIn) {
+            loginPage.style.display = "none";
+            mainDashboard.style.display = "flex";
+            renderBasedOnRole();
+            fetchNotifications();
+          } else {
+            loginPage.style.display = "flex";
+            mainDashboard.style.display = "none";
+            loginCard.style.display = "block";
+            signupCard.style.display = "none";
+            forgotPasswordCard.style.display = "none";
+          }
+        }
+
+        function renderBasedOnRole() {
+          const userId = userIdInput.value.trim();
+          if (userRole === "admin") {
+            const adminDetails = credentials.admin[userId];
+            const adminRole = adminDetails.adminRole;
+            const adminLevel =
+              adminDetails.adminLevel === "All"
+                ? "All Levels"
+                : adminDetails.adminLevel + "-level";
+            adminPanelLink.style.display = "list-item";
+            userRoleDisplay.textContent = `Role: ${adminRole} (${adminLevel})`;
+
+            // Set the current values in the switch role dropdowns
+            switchAdminRoleSelect.value = adminDetails.adminRole;
+            switchAdminLevelSelect.value = adminDetails.adminLevel;
+
+            showStudentView(); // Default view on login is home feed
+            renderDepartmentTabs("all");
+          } else {
+            adminPanelLink.style.display = "none";
+            const studentDetails = credentials.student[userId];
+            const level = studentDetails.level;
+            userRoleDisplay.textContent = `Role: Student (${level}-level)`;
+            showStudentView();
+            userDepartment = studentDetails.department;
+            renderDepartmentTabs(userDepartment);
+          }
+        }
+
+        function renderDepartmentTabs(department) {
+          departmentButtons.forEach(btn => {
+            if (btn.dataset.dept === "All" || btn.dataset.dept === department) {
+              btn.style.display = "block";
+            } else {
+              btn.style.display = "none";
             }
-            
-            function renderBasedOnRole() {
-                const userId = userIdInput.value.trim();
-                if (userRole === 'admin') {
-                    const adminDetails = credentials.admin[userId];
-                    const adminRole = adminDetails.adminRole;
-                    const adminLevel = adminDetails.adminLevel === 'All' ? 'All Levels' : adminDetails.adminLevel + '-level';
-                    adminPanelLink.style.display = 'list-item';
-                    userRoleDisplay.textContent = `Role: ${adminRole} (${adminLevel})`;
-                    
-                    // Set the current values in the switch role dropdowns
-                    switchAdminRoleSelect.value = adminDetails.adminRole;
-                    switchAdminLevelSelect.value = adminDetails.adminLevel;
+          });
+          document.querySelector('.department-tabs .btn[data-dept="All"]').classList.add("active");
+          currentDepartment = "All";
+        }
 
-                    showStudentView(); // Default view on login is home feed
-                } else {
-                    adminPanelLink.style.display = 'none';
-                    const studentDetails = credentials.student[userId];
-                    const level = studentDetails.level;
-                    userRoleDisplay.textContent = `Role: Student (${level}-level)`;
-                    showStudentView();
-                }
-                renderDepartmentTabs();
+        function showStudentView() {
+          adminPanel.style.display = "none";
+          departmentTabs.style.display = "flex";
+          notificationList.style.display = "block";
+          document
+            .querySelector(".sidebar-menu a.active")
+            ?.classList.remove("active");
+          homeLink.classList.add("active");
+          if (window.innerWidth <= 767.98) {
+            sidebar.classList.remove("show");
+          }
+        }
+
+        function showAdminView() {
+          if (userRole === "admin") {
+            adminPanel.style.display = "block";
+            departmentTabs.style.display = "none";
+            notificationList.style.display = "none";
+            document
+              .querySelector(".sidebar-menu a.active")
+              ?.classList.remove("active");
+            toggleAdminBtn.classList.add("active");
+            if (window.innerWidth <= 767.98) {
+              sidebar.classList.remove("show");
             }
+          } else {
+            showStudentView();
+          }
+        }
 
-            function showStudentView() {
-                adminPanel.style.display = 'none';
-                departmentTabs.style.display = 'flex';
-                notificationList.style.display = 'block';
-                document.querySelector('.sidebar-menu a.active')?.classList.remove('active');
-                homeLink.classList.add('active');
-                if (window.innerWidth <= 767.98) {
-                     sidebar.classList.remove('show');
-                }
-            }
+        function updateNotificationBadge() {
+          const unreadCount = allNotifications.filter(
+            (notif) => !notif.isRead
+          ).length;
+          if (unreadCount > 0) {
+            notificationBadge.textContent = unreadCount;
+            notificationBadge.style.display = "block";
+          } else {
+            notificationBadge.style.display = "none";
+          }
+        }
 
-            function showAdminView() {
-                if (userRole === 'admin') {
-                    adminPanel.style.display = 'block';
-                    departmentTabs.style.display = 'none';
-                    notificationList.style.display = 'none';
-                    document.querySelector('.sidebar-menu a.active')?.classList.remove('active');
-                    toggleAdminBtn.classList.add('active');
-                    if (window.innerWidth <= 767.98) {
-                        sidebar.classList.remove('show');
-                    }
-                } else {
-                    showStudentView();
-                }
-            }
+        async function fetchNotifications() {
+          try {
+            const mockData = [
+              {
+                id: 1,
+                title: "Exam Timetable",
+                body: "The final exam timetable has been posted on the faculty portal.",
+                department: "All",
+                timestamp: new Date(Date.now() - 1200000),
+                expirationDate: "2025-10-30",
+                posterName: "Engr Zakriya",
+                isRead: false,
+              },
+              {
+                id: 2,
+                title: "Lab Session Cancelled",
+                body: "The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.",
+                department: "Mechanical Engineering",
+                timestamp: new Date(Date.now() - 3600000),
+                expirationDate: "2025-08-17",
+                posterName: "Engr K.O abdulrahman",
+                isRead: true,
+              },
+              {
+                id: 3,
+                title: "Senior Project Submission",
+                body: "Reminder: All senior projects are due this Friday. Submit your report on the departmental website.",
+                department: "All",
+                timestamp: new Date(Date.now() - 7200000),
+                expirationDate: "2025-09-01",
+                posterName: "Faculty officer",
+                isRead: false,
+              },
+              {
+                id: 4,
+                title: "Guest Lecture",
+                body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.',
+                department: "Electrical Engineering",
+                timestamp: new Date(Date.now() - 10800000),
+                expirationDate: "2025-08-20",
+                posterName: "Engr Alao",
+                isRead: true,
+              },
+              {
+                id: 5,
+                title: "Exam Results",
+                body: "Final exam results for Civil Engineering have been released.",
+                department: "Civil Engineering",
+                timestamp: new Date(Date.now() - 14400000),
+                expirationDate: "2025-09-15",
+                posterName: "Engr Zakriya",
+                isRead: false,
+              },
+              {
+                id: 6,
+                title: "Field Trip",
+                body: "Chemical Engineering students have a mandatory field trip to the local refinery next week.",
+                department: "Chemical Engineering",
+                timestamp: new Date(Date.now() - 18000000),
+                expirationDate: "2025-08-25",
+                posterName: "Faculty officer",
+                isRead: true,
+              },
+              {
+                id: 7,
+                title: "New Software Engineering Course",
+                body: "The new Software Engineering course registration is now open.",
+                department: "Computer Engineering",
+                timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 - 1),
+                expirationDate: "2025-08-15",
+                posterName: "Associate Professor",
+                isRead: false,
+              },
+            ];
 
-            function renderDepartmentTabs() {
-                departmentTabs.innerHTML = '';
-                let tabs = [{ name: 'All', value: 'All' }];
-                
-                if (userRole === 'student') {
-                    const studentId = userIdInput.value.trim();
-                    const studentDept = credentials.student[studentId].department;
-                    tabs.push({ name: studentDept, value: studentDept });
-                } else if (userRole === 'admin') {
-                    tabs = [
-                        { name: 'All', value: 'All' },
-                        { name: 'Agricultural and Bio Systems', value: 'Agricultural and Bio Systems' },
-                        { name: 'Water Resources and Environmental', value: 'Water Resources and Environmental' },
-                        { name: 'Chemical', value: 'Chemical' },
-                        { name: 'Food', value: 'Food' },
-                        { name: 'Computer', value: 'Computer' },
-                        { name: 'Electrical', value: 'Electrical' },
-                        { name: 'Civil', value: 'Civil' },
-                        { name: 'Mechanical', value: 'Mechanical' },
-                        { name: 'Biomedical', value: 'Biomedical' },
-                        { name: 'Material and Metallurgical', value: 'Material and Metallurgical' },
-                    ];
-                }
+            allNotifications = mockData;
+            renderNotifications();
+            updateNotificationBadge();
+          } catch (error) {
+            console.error("Error fetching notifications:", error);
+            notificationList.innerHTML = `<div class="alert alert-danger" role="alert">Failed to load notifications. Please check your network connection.</div>`;
+          }
+        }
 
-                tabs.forEach((tab, index) => {
-                    const btn = document.createElement('button');
-                    btn.className = `btn m-1 ${tab.value === currentDepartment ? 'active' : ''}`;
-                    btn.textContent = tab.name;
-                    btn.dataset.dept = tab.value;
-                    departmentTabs.appendChild(btn);
-                });
-            }
+        function renderNotifications() {
+          const today = new Date().toISOString().slice(0, 10);
+          const filteredNotifications = allNotifications
+            .filter(
+              (notif) =>
+                (currentDepartment === "All" ||
+                  notif.department.toLowerCase() === currentDepartment.toLowerCase()) &&
+                (!notif.expirationDate || notif.expirationDate >= today)
+            )
+            .sort((a, b) => b.timestamp - a.timestamp);
 
-            function updateNotificationBadge() {
-                const unreadCount = allNotifications.filter(notif => !notif.isRead).length;
-                if (unreadCount > 0) {
-                    notificationBadge.textContent = unreadCount;
-                    notificationBadge.style.display = 'block';
-                } else {
-                    notificationBadge.style.display = 'none';
-                }
-            }
+          if (filteredNotifications.length === 0) {
+            notificationList.innerHTML = `<div class="text-center text-muted p-5">No active notifications found for this department.</div>`;
+            return;
+          }
 
-            async function fetchNotifications() {
-                try {
-                    const mockData = [
-                        { id: 1, title: 'Exam Timetable', body: 'The final exam timetable has been posted on the faculty portal.', department: 'All', timestamp: new Date(Date.now() - 1200000), expirationDate: '2025-10-30', posterName: 'Engr Zakriya', isRead: false },
-                        { id: 2, title: 'Lab Session Cancelled', body: 'The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.', department: 'Mechanical', timestamp: new Date(Date.now() - 3600000), expirationDate: '2025-08-17', posterName: 'Engr K.O abdulrahman', isRead: true },
-                        { id: 3, title: 'Senior Project Submission', body: 'Reminder: All senior projects are due this Friday. Submit your report on the departmental website.', department: 'All', timestamp: new Date(Date.now() - 7200000), expirationDate: '2025-09-01', posterName: 'Faculty officer', isRead: false },
-                        { id: 4, title: 'Guest Lecture', body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.', department: 'Electrical', timestamp: new Date(Date.now() - 10800000), expirationDate: '2025-08-20', posterName: 'Engr Alao', isRead: true },
-                        { id: 5, title: 'Exam Results', body: 'Final exam results for Civil Engineering have been released.', department: 'Civil', timestamp: new Date(Date.now() - 14400000), expirationDate: '2025-09-15', posterName: 'Engr Zakriya', isRead: false },
-                        { id: 6, title: 'Field Trip', body: 'Chemical Engineering students have a mandatory field trip to the local refinery next week.', department: 'Chemical', timestamp: new Date(Date.now() - 18000000), expirationDate: '2025-08-25', posterName: 'Faculty officer', isRead: true },
-                        { id: 7, title: 'Past Event', body: 'This notification expired yesterday.', department: 'All', timestamp: new Date(Date.now() - 24*60*60*1000 - 1), expirationDate: '2025-08-15', posterName: 'Engr Alao', isRead: true }
-                    ];
-
-                    allNotifications = mockData;
-                    renderNotifications();
-                    updateNotificationBadge();
-                } catch (error) {
-                    console.error('Error fetching notifications:', error);
-                    notificationList.innerHTML = `<div class="alert alert-danger" role="alert">Failed to load notifications. Please check your network connection.</div>`;
-                }
-            }
-
-            function renderNotifications() {
-                const today = new Date().toISOString().slice(0, 10);
-                const filteredNotifications = allNotifications.filter(notif =>
-                    (currentDepartment === 'All' || notif.department === currentDepartment) &&
-                    (!notif.expirationDate || notif.expirationDate >= today)
-                ).sort((a, b) => b.timestamp - a.timestamp);
-
-                if (filteredNotifications.length === 0) {
-                    notificationList.innerHTML = `<div class="text-center text-muted p-5">No active notifications found for this department.</div>`;
-                    return;
-                }
-
-                const notificationsHtml = filteredNotifications.map(notif => `
+          const notificationsHtml = filteredNotifications
+            .map(
+              (notif) => `
                     <div class="notification-card">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge-department">${notif.department}</span>
-                            <small class="text-muted">${new Date(notif.timestamp).toLocaleString()}</small>
+                            <span class="badge-department">${
+                              notif.department
+                            }</span>
+                            <small class="text-muted">${new Date(
+                              notif.timestamp
+                            ).toLocaleString()}</small>
                         </div>
                         <h5 class="card-title fw-bold">${notif.title}</h5>
                         <p class="card-text">${notif.body}</p>
-                        <p class="mt-2 mb-0"><small class="text-muted fst-italic">Posted by: ${notif.posterName}</small></p>
-                        ${notif.expirationDate ? `<p class="mt-2 mb-0"><small class="text-danger fw-bold">Expires: ${notif.expirationDate}</small></p>` : ''}
+                        <p class="mt-2 mb-0"><small class="text-muted fst-italic">Posted by: ${
+                          notif.posterName
+                        }</small></p>
+                        ${
+                          notif.expirationDate
+                            ? `<p class="mt-2 mb-0"><small class="text-danger fw-bold">Expires: ${notif.expirationDate}</small></p>`
+                            : ""
+                        }
                     </div>
-                `).join('');
+                `
+            )
+            .join("");
 
-                notificationList.innerHTML = notificationsHtml;
+          notificationList.innerHTML = notificationsHtml;
+        }
+
+        async function postNotification(e) {
+          e.preventDefault();
+          const title = document.getElementById("postTitle").value;
+          const body = document.getElementById("postBody").value;
+          const department = document.getElementById("postDepartment").value;
+          const expirationDate =
+            document.getElementById("postExpirationDate").value;
+          const userId = userIdInput.value.trim();
+          const adminRole = credentials.admin[userId].adminRole;
+
+          if (!title || !body) {
+            showAlert("Please fill in all fields.");
+            return;
+          }
+
+          const newNotification = {
+            title,
+            body,
+            department,
+            expirationDate,
+            timestamp: new Date().toISOString(),
+            posterName: adminRole,
+            isRead: false,
+          };
+
+          try {
+            allNotifications.unshift({
+              ...newNotification,
+              id: Date.now(),
+              timestamp: new Date(),
+            });
+            renderNotifications();
+            updateNotificationBadge();
+            showAlert("Notification posted successfully!");
+            postForm.reset();
+          } catch (error) {
+            console.error("Error posting notification:", error);
+            showAlert("Failed to post notification. Please try again.");
+          }
+        }
+
+        // --- Event Handlers ---
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const userId = userIdInput.value.trim();
+          const password = passwordInput.value.trim();
+          const role = roleSelect.value;
+
+          if (role === "student") {
+            const studentLevel = studentLoginLevelSelect.value;
+            if (!studentLevel) {
+              showAlert("Please select your level.");
+              return;
             }
-
-            async function postNotification(e) {
-                e.preventDefault();
-                const title = document.getElementById('postTitle').value;
-                const body = document.getElementById('postBody').value;
-                const department = document.getElementById('postDepartment').value;
-                const expirationDate = document.getElementById('postExpirationDate').value;
-                const userId = userIdInput.value.trim();
-                const adminRole = credentials.admin[userId].adminRole;
-
-                if (!title || !body) {
-                    showAlert('Please fill in all fields.');
-                    return;
-                }
-
-                const newNotification = {
-                    title,
-                    body,
-                    department,
-                    expirationDate,
-                    timestamp: new Date().toISOString(),
-                    posterName: adminRole,
-                    isRead: false
-                };
-
-                try {
-                    allNotifications.unshift({ ...newNotification, id: Date.now(), timestamp: new Date() });
-                    renderNotifications();
-                    updateNotificationBadge();
-                    showAlert('Notification posted successfully!');
-                    postForm.reset();
-                } catch (error) {
-                    console.error('Error posting notification:', error);
-                    showAlert('Failed to post notification. Please try again.');
-                }
+            if (
+              credentials[role][userId] &&
+              credentials[role][userId].password === password &&
+              credentials[role][userId].level === studentLevel
+            ) {
+              userRole = role;
+              isLoggedIn = true;
+              showAlert("Login successful!");
+              renderApp();
+            } else {
+              showAlert("Invalid credentials. Please try again.");
             }
-            
-            // --- Event Handlers ---
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const userId = userIdInput.value.trim();
-                const password = passwordInput.value.trim();
-                const role = roleSelect.value;
-                
-                if (!credentials[role][userId] || credentials[role][userId].password !== password) {
-                    showAlert('Invalid credentials. Please try again.');
-                } else {
-                    userRole = role;
-                    isLoggedIn = true;
-                    showAlert('Login successful!');
-                    renderApp();
-                }
-            });
-
-            signupForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const userId = signupUserIdInput.value.trim();
-                const password = signupPasswordInput.value.trim();
-                const confirmPassword = confirmPasswordInput.value.trim();
-                const role = signupRoleSelect.value;
-                
-                let valid = true;
-                if (!userId || !password || !confirmPassword) {
-                    valid = false;
-                } else if (password !== confirmPassword) {
-                    showAlert('Passwords do not match.');
-                    return;
-                }
-                
-                if (credentials[role][userId]) {
-                    showAlert('Account already exists for this user ID.');
-                    return;
-                }
-
-                if (role === 'student') {
-                    const studentDepartment = studentDepartmentSelect.value;
-                    const studentLevel = studentLevelSelect.value;
-                    const securityQuestion = securityQuestionSelect.value;
-                    const securityAnswer = securityAnswerInput.value.trim();
-                    if (!studentDepartment || !studentLevel || !securityQuestion || !securityAnswer) {
-                        valid = false;
-                    } else {
-                        credentials[role][userId] = { password, department: studentDepartment, level: studentLevel, securityQuestion, securityAnswer };
-                    }
-                } else if (role === 'admin') {
-                    const adminRole = adminRoleSelect.value;
-                    const adminLevel = adminLevelSelect.value;
-                    if (!adminRole || !adminLevel) {
-                        valid = false;
-                    } else {
-                        credentials[role][userId] = { password, adminRole, adminLevel };
-                    }
-                }
-
-                if (!valid) {
-                    showAlert('Please fill in all fields.');
-                    return;
-                }
-
-                showAlert('Account created successfully! You can now log in.');
-                loginCard.style.display = 'block';
-                signupCard.style.display = 'none';
-                loginForm.reset();
-                signupForm.reset();
-            });
-
-            forgotPasswordForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const role = roleSelect.value;
-                const step = forgotPasswordForm.dataset.step || '1';
-
-                if (role === 'student') {
-                    if (step === '1') {
-                        const userId = forgotUserIdInput.value.trim();
-                        recoveryUser = credentials.student[userId];
-                        if (recoveryUser) {
-                            forgotPasswordForm.dataset.step = '2';
-                            forgotPasswordPrompt.textContent = 'Please answer your security question.';
-                            forgotUserIdDiv.style.display = 'none';
-                            securityQuestionDiv.style.display = 'block';
-                            securityQuestionDisplay.textContent = recoveryUser.securityQuestion;
-                            forgotPasswordSubmitBtn.textContent = 'Verify Answer';
-                        } else {
-                            showAlert('Matric No. not found.');
-                        }
-                    } else if (step === '2') {
-                        const answer = securityAnswerVerifyInput.value.trim().toLowerCase();
-                        if (answer === recoveryUser.securityAnswer.toLowerCase()) {
-                            forgotPasswordForm.dataset.step = '3';
-                            forgotPasswordPrompt.textContent = 'Set your new password.';
-                            securityQuestionDiv.style.display = 'none';
-                            newPasswordDiv.style.display = 'block';
-                            forgotPasswordSubmitBtn.textContent = 'Reset Password';
-                        } else {
-                            showAlert('Incorrect answer. Please try again.');
-                        }
-                    } else if (step === '3') {
-                        const newPassword = newPasswordInput.value.trim();
-                        const newPasswordConfirm = newPasswordConfirmInput.value.trim();
-                        if (newPassword && newPassword === newPasswordConfirm) {
-                            const userId = forgotUserIdInput.value.trim();
-                            credentials.student[userId].password = newPassword;
-                            showAlert('Password has been reset successfully!');
-                            forgotPasswordForm.reset();
-                            forgotPasswordForm.dataset.step = '1';
-                            renderApp();
-                        } else {
-                            showAlert('Passwords do not match or are empty.');
-                        }
-                    }
-                } else if (role === 'admin') {
-                    if (step === '1') {
-                        const userId = forgotUserIdInput.value.trim();
-                        recoveryUser = credentials.admin[userId];
-                        if (recoveryUser) {
-                            // This would typically send an email, but for this demo, we'll simulate it.
-                            showAlert('A password reset link has been sent to your email.');
-                            // Move to the next step, which would be to enter a new password after clicking the email link
-                            forgotPasswordForm.dataset.step = '2';
-                            forgotPasswordPrompt.textContent = 'Enter your new password.';
-                            forgotUserIdDiv.style.display = 'none';
-                            newPasswordDiv.style.display = 'block';
-                            forgotPasswordSubmitBtn.textContent = 'Reset Password';
-                        } else {
-                            showAlert('Email not found.');
-                        }
-                    } else if (step === '2') {
-                        const newPassword = newPasswordInput.value.trim();
-                        const newPasswordConfirm = newPasswordConfirmInput.value.trim();
-                        if (newPassword && newPassword === newPasswordConfirm) {
-                            const userId = forgotUserIdInput.value.trim();
-                            credentials.admin[userId].password = newPassword;
-                            showAlert('Password has been reset successfully!');
-                            forgotPasswordForm.reset();
-                            forgotPasswordForm.dataset.step = '1';
-                            renderApp();
-                        } else {
-                            showAlert('Passwords do not match or are empty.');
-                        }
-                    }
-                }
-            });
-
-            // Toggling between login, signup, and forgot password cards
-            toggleToSignupBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginCard.style.display = 'none';
-                signupCard.style.display = 'block';
-            });
-            
-            toggleToLoginBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                signupCard.style.display = 'none';
-                loginCard.style.display = 'block';
-            });
-
-            forgotPasswordBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginCard.style.display = 'none';
-                forgotPasswordCard.style.display = 'block';
-                forgotPasswordForm.dataset.step = '1';
-                forgotPasswordForm.reset();
-                forgotUserIdDiv.style.display = 'block';
-                securityQuestionDiv.style.display = 'none';
-                newPasswordDiv.style.display = 'none';
-                forgotPasswordSubmitBtn.textContent = 'Continue';
-                
-                const role = roleSelect.value;
-                if (role === 'student') {
-                    forgotUserIdInput.placeholder = 'Matric No.';
-                    forgotPasswordPrompt.textContent = 'Enter your Matric No. to reset your password.';
-                } else {
-                    forgotUserIdInput.placeholder = 'Email';
-                    forgotPasswordPrompt.textContent = 'Enter your email to receive a password reset link.';
-                }
-            });
-
-            forgotToLoginBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                forgotPasswordCard.style.display = 'none';
-                loginCard.style.display = 'block';
-            });
-
-            signupRoleSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'student') {
-                    studentSpecificFields.style.display = 'block';
-                    adminSpecificFields.style.display = 'none';
-                } else if (e.target.value === 'admin') {
-                    studentSpecificFields.style.display = 'none';
-                    adminSpecificFields.style.display = 'block';
-                }
-            });
-            
-            document.getElementById('logoutBtn').addEventListener('click', () => {
-                isLoggedIn = false;
-                userRole = '';
-                showAlert('Logging out...');
-                renderApp();
-            });
-            
-            hamburgerBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('show');
-            });
-
-            toggleAdminBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                showAdminView();
-            });
-            
-            homeLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                showStudentView();
-            });
-
-            departmentTabs.addEventListener('click', (e) => {
-                if (e.target.matches('.btn')) {
-                    document.querySelectorAll('.department-tabs .btn').forEach(btn => btn.classList.remove('active'));
-                    e.target.classList.add('active');
-                    currentDepartment = e.target.dataset.dept;
-                    renderNotifications();
-                }
-            });
-
-            postForm.addEventListener('submit', postNotification);
-
-            switchRoleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const newRole = switchAdminRoleSelect.value;
-                const newLevel = switchAdminLevelSelect.value;
-                const userId = userIdInput.value.trim();
-                
-                if (newRole && newLevel) {
-                    credentials.admin[userId].adminRole = newRole;
-                    credentials.admin[userId].adminLevel = newLevel;
-                    renderBasedOnRole();
-                    showAlert('Admin role and level updated successfully!');
-                } else {
-                    showAlert('Please select both a role and a level.');
-                }
-            });
-
-            darkModeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-            });
-
-            // --- Initial Load ---
-            renderApp();
+          } else if (role === "admin") {
+            if (
+              credentials[role][userId] &&
+              credentials[role][userId].password === password
+            ) {
+              userRole = role;
+              isLoggedIn = true;
+              showAlert("Login successful!");
+              renderApp();
+            } else {
+              showAlert("Invalid credentials. Please try again.");
+            }
+          }
         });
+
+        signupForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const userId = signupUserIdInput.value.trim();
+          const password = signupPasswordInput.value.trim();
+          const confirmPassword = confirmPasswordInput.value.trim();
+          const role = signupRoleSelect.value;
+          const securityQuestion = securityQuestionSelect.value;
+          const securityAnswer = securityAnswerInput.value.trim();
+          const adminRole = adminRoleSelect.value;
+          const adminLevel = adminLevelSelect.value;
+          const department = signupStudentDepartmentSelect.value;
+
+          if (
+            !userId ||
+            !password ||
+            !confirmPassword ||
+            (role === "student" && (!securityQuestion || !securityAnswer || !department)) ||
+            (role === "admin" && (!adminRole || !adminLevel))
+          ) {
+            showAlert("Please fill in all fields.");
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            showAlert("Passwords do not match.");
+            return;
+          }
+
+          if (credentials[role][userId]) {
+            showAlert("Account already exists for this user ID.");
+            return;
+          }
+
+          credentials[role][userId] = { password };
+          if (role === "student") {
+            credentials[role][userId].securityQuestion = securityQuestion;
+            credentials[role][userId].securityAnswer = securityAnswer;
+            const matricLevel = userId.substring(3, 5);
+            credentials[role][userId].level = matricLevel + "00";
+            credentials[role][userId].department = department;
+          } else if (role === "admin") {
+            credentials[role][userId].adminRole = adminRole;
+            credentials[role][userId].adminLevel = adminLevel;
+          }
+
+          showAlert("Account created successfully! You can now log in.");
+          loginCard.style.display = "block";
+          signupCard.style.display = "none";
+          loginForm.reset();
+          signupForm.reset();
+        });
+
+        forgotPasswordForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const role = roleSelect.value;
+          const step = forgotPasswordForm.dataset.step || "1";
+
+          if (role === "student") {
+            if (step === "1") {
+              const userId = forgotUserIdInput.value.trim();
+              recoveryUser = credentials.student[userId];
+              if (recoveryUser) {
+                forgotPasswordForm.dataset.step = "2";
+                forgotPasswordPrompt.textContent =
+                  "Please answer your security question.";
+                forgotUserIdDiv.style.display = "none";
+                securityQuestionDiv.style.display = "block";
+                securityQuestionDisplay.textContent =
+                  recoveryUser.securityQuestion;
+                forgotPasswordSubmitBtn.textContent = "Verify Answer";
+              } else {
+                showAlert("Matric No. not found.");
+              }
+            } else if (step === "2") {
+              const answer = securityAnswerVerifyInput.value
+                .trim()
+                .toLowerCase();
+              if (answer === recoveryUser.securityAnswer.toLowerCase()) {
+                forgotPasswordForm.dataset.step = "3";
+                forgotPasswordPrompt.textContent = "Set your new password.";
+                securityQuestionDiv.style.display = "none";
+                newPasswordDiv.style.display = "block";
+                forgotPasswordSubmitBtn.textContent = "Reset Password";
+              } else {
+                showAlert("Incorrect answer. Please try again.");
+              }
+            } else if (step === "3") {
+              const newPassword = newPasswordInput.value.trim();
+              const newPasswordConfirm = newPasswordConfirmInput.value.trim();
+              if (newPassword && newPassword === newPasswordConfirm) {
+                const userId = forgotUserIdInput.value.trim();
+                credentials.student[userId].password = newPassword;
+                showAlert("Password has been reset successfully!");
+                forgotPasswordForm.reset();
+                forgotPasswordForm.dataset.step = "1";
+                renderApp();
+              } else {
+                showAlert("Passwords do not match or are empty.");
+              }
+            }
+          } else if (role === "admin") {
+            if (step === "1") {
+              const userId = forgotUserIdInput.value.trim();
+              recoveryUser = credentials.admin[userId];
+              if (recoveryUser) {
+                // This would typically send an email, but for this demo, we'll simulate it.
+                showAlert("A password reset link has been sent to your email.");
+                // Move to the next step, which would be to enter a new password after clicking the email link
+                forgotPasswordForm.dataset.step = "2";
+                forgotPasswordPrompt.textContent = "Enter your new password.";
+                forgotUserIdDiv.style.display = "none";
+                newPasswordDiv.style.display = "block";
+                forgotPasswordSubmitBtn.textContent = "Reset Password";
+              } else {
+                showAlert("Email not found.");
+              }
+            } else if (step === "2") {
+              const newPassword = newPasswordInput.value.trim();
+              const newPasswordConfirm = newPasswordConfirmInput.value.trim();
+              if (newPassword && newPassword === newPasswordConfirm) {
+                const userId = forgotUserIdInput.value.trim();
+                credentials.admin[userId].password = newPassword;
+                showAlert("Password has been reset successfully!");
+                forgotPasswordForm.reset();
+                forgotPasswordForm.dataset.step = "1";
+                renderApp();
+              } else {
+                showAlert("Passwords do not match or are empty.");
+              }
+            }
+          }
+        });
+
+        // Toggling between login, signup, and forgot password cards
+        toggleToSignupBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          loginCard.style.display = "none";
+          signupCard.style.display = "block";
+        });
+
+        toggleToLoginBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          signupCard.style.display = "none";
+          loginCard.style.display = "block";
+        });
+
+        forgotPasswordBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          loginCard.style.display = "none";
+          forgotPasswordCard.style.display = "block";
+          forgotPasswordForm.dataset.step = "1";
+          forgotPasswordForm.reset();
+          forgotUserIdDiv.style.display = "block";
+          securityQuestionDiv.style.display = "none";
+          newPasswordDiv.style.display = "none";
+          forgotPasswordSubmitBtn.textContent = "Continue";
+
+          const role = roleSelect.value;
+          if (role === "student") {
+            forgotUserIdInput.placeholder = "Matric No.";
+            forgotPasswordPrompt.textContent =
+              "Enter your Matric No. to reset your password.";
+          } else {
+            forgotUserIdInput.placeholder = "Email";
+            forgotPasswordPrompt.textContent =
+              "Enter your email to receive a password reset link.";
+          }
+        });
+
+        forgotToLoginBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          forgotPasswordCard.style.display = "none";
+          loginCard.style.display = "block";
+        });
+
+        signupRoleSelect.addEventListener("change", (e) => {
+          if (e.target.value === "student") {
+            studentSpecificFields.style.display = "block";
+            adminSpecificFields.style.display = "none";
+          } else if (e.target.value === "admin") {
+            studentSpecificFields.style.display = "none";
+            adminSpecificFields.style.display = "block";
+          }
+        });
+
+        roleSelect.addEventListener("change", (e) => {
+          if (e.target.value === "student") {
+            studentLoginLevel.style.display = "block";
+          } else {
+            studentLoginLevel.style.display = "none";
+          }
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          isLoggedIn = false;
+          userRole = "";
+          showAlert("Logging out...");
+          renderApp();
+        });
+
+        hamburgerBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("show");
+        });
+
+        toggleAdminBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          showAdminView();
+        });
+
+        homeLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          showStudentView();
+          renderDepartmentTabs(userDepartment); // Ensure tabs are rendered correctly on navigating back to home
+        });
+
+        departmentTabs.addEventListener("click", (e) => {
+          if (e.target.matches(".btn")) {
+            document
+              .querySelectorAll(".department-tabs .btn")
+              .forEach((btn) => btn.classList.remove("active"));
+            e.target.classList.add("active");
+            currentDepartment = e.target.dataset.dept;
+            renderNotifications();
+          }
+        });
+
+        postForm.addEventListener("submit", postNotification);
+
+        switchRoleBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const newRole = switchAdminRoleSelect.value;
+          const newLevel = switchAdminLevelSelect.value;
+          const userId = userIdInput.value.trim();
+
+          if (newRole && newLevel) {
+            credentials.admin[userId].adminRole = newRole;
+            credentials.admin[userId].adminLevel = newLevel;
+            renderBasedOnRole();
+            showAlert("Admin role and level updated successfully!");
+          } else {
+            showAlert("Please select both a role and a level.");
+          }
+        });
+
+        darkModeToggle.addEventListener("click", () => {
+          document.body.classList.toggle("dark-mode");
+        });
+
+        notificationIcon.addEventListener("click", () => {
+          const unreadNotifications = allNotifications.filter(
+            (notif) => !notif.isRead
+          );
+          if (unreadNotifications.length > 0) {
+            const latestNotif = unreadNotifications[0];
+            notificationTitle.textContent = latestNotif.title;
+            notificationBody.textContent = latestNotif.body;
+            notificationDept.textContent = latestNotif.department;
+            notificationPoster.textContent = latestNotif.posterName;
+
+            if (latestNotif.expirationDate) {
+              notificationExpires.style.display = "block";
+              notificationExpires.querySelector(
+                "small"
+              ).textContent = `Expires: ${latestNotif.expirationDate}`;
+            } else {
+              notificationExpires.style.display = "none";
+            }
+
+            // Mark as read and update badge
+            latestNotif.isRead = true;
+            updateNotificationBadge();
+
+            notificationModal.show();
+          } else {
+            showAlert("No new notifications.");
+          }
+        });
+
+        // Add event listeners for password visibility toggles
+        document.querySelector("#loginCard #passwordInput + span").addEventListener("click", (e) => {
+          const input = document.getElementById("passwordInput");
+          const icon = e.currentTarget.querySelector("i");
+          togglePasswordVisibility(input, icon);
+        });
+
+        document.querySelector("#signupCard #signupPasswordInput + span").addEventListener("click", (e) => {
+          const input = document.getElementById("signupPasswordInput");
+          const icon = e.currentTarget.querySelector("i");
+          togglePasswordVisibility(input, icon);
+        });
+
+        document.querySelector("#signupCard #confirmPasswordInput + span").addEventListener("click", (e) => {
+          const input = document.getElementById("confirmPasswordInput");
+          const icon = e.currentTarget.querySelector("i");
+          togglePasswordVisibility(input, icon);
+        });
+
+        document.querySelector("#forgotPasswordCard #newPasswordInput + span").addEventListener("click", (e) => {
+          const input = document.getElementById("newPasswordInput");
+          const icon = e.currentTarget.querySelector("i");
+          togglePasswordVisibility(input, icon);
+        });
+
+        document.querySelector("#forgotPasswordCard #newPasswordConfirmInput + span").addEventListener("click", (e) => {
+          const input = document.getElementById("newPasswordConfirmInput");
+          const icon = e.currentTarget.querySelector("i");
+          togglePasswordVisibility(input, icon);
+        });
+        
+        // Initial Load
+        renderApp();
+      });
     </script>
-</body>
+  </body>
 </html>
