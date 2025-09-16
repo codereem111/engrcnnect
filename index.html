@@ -185,6 +185,16 @@
         background-color: var(--secondary-color);
         border-color: var(--secondary-color);
       }
+      
+      .notification-icon-container {
+        position: relative;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        left: 0px;
+      }
 
       /* Dark Mode */
       body.dark-mode {
@@ -217,16 +227,23 @@
       .dark-mode .sidebar-menu a {
         color: var(--text-secondary);
       }
-
+      
       .dark-mode .sidebar-menu a:hover,
       .dark-mode .sidebar-menu a.active {
         background-color: var(--secondary-color);
         color: white;
       }
-
+      
       .dark-mode .sidebar-menu a .bi {
         color: var(--text-secondary);
       }
+      
+      /* Dark mode toggle specific styles */
+      .dark-mode #darkModeToggle span,
+      .dark-mode #darkModeToggle i {
+        color: white; /* Make the text and icon white in dark mode */
+      }
+
 
       .dark-mode .top-bar,
       .dark-mode .department-tabs .btn,
@@ -1022,50 +1039,10 @@
         let currentDepartment = "All";
         let userDepartment = "";
         let recoveryUser = null;
+        let userProfile = {};
+        let userToken = null;
 
-        // --- Hardcoded Credentials for Demo ---
-        const credentials = {
-          admin: {
-            "admin@engrconnect.edu": {
-              password: "password123",
-              adminRole: "HOD",
-              adminLevel: "All",
-            },
-            "prof.johnson@engrconnect.edu": {
-              password: "pass123",
-              adminRole: "Associate Professor",
-              adminLevel: "400",
-            },
-            "leveladviser@engrconnect.edu": {
-              password: "password123",
-              adminRole: "Level Adviser",
-              adminLevel: "300",
-            },
-          },
-          student: {
-            "22/30GR023": {
-              password: "password123",
-              securityQuestion: "What is your favorite color?",
-              securityAnswer: "blue",
-              level: "300",
-              department: "Computer Engineering",
-            },
-            "21/50GR045": {
-              password: "password123",
-              securityQuestion: "What is your mother's maiden name?",
-              securityAnswer: "adebayo",
-              level: "400",
-              department: "Civil Engineering",
-            },
-            "23/60GR011": {
-                password: "password123",
-                securityQuestion: "What was the name of your first pet?",
-                securityAnswer: "max",
-                level: "200",
-                department: "Electrical Engineering",
-            },
-          },
-        };
+        const API_BASE_URL = "http://127.0.0.1:5000/api";
 
         // --- Utility Functions ---
         const showAlert = (message) => {
@@ -1080,7 +1057,7 @@
           iconElement.classList.toggle("bi-eye-fill", isPassword);
           iconElement.classList.toggle("bi-eye-slash-fill", !isPassword);
         };
-
+        
         // --- View Rendering Functions ---
         function renderApp() {
           if (isLoggedIn) {
@@ -1098,30 +1075,27 @@
         }
 
         function renderBasedOnRole() {
-          const userId = userIdInput.value.trim();
           if (userRole === "admin") {
-            const adminDetails = credentials.admin[userId];
-            const adminRole = adminDetails.adminRole;
+            const adminRole = userProfile.adminRole;
             const adminLevel =
-              adminDetails.adminLevel === "All"
+              userProfile.adminLevel === "All"
                 ? "All Levels"
-                : adminDetails.adminLevel + "-level";
+                : userProfile.adminLevel + "-level";
             adminPanelLink.style.display = "list-item";
             userRoleDisplay.textContent = `Role: ${adminRole} (${adminLevel})`;
 
             // Set the current values in the switch role dropdowns
-            switchAdminRoleSelect.value = adminDetails.adminRole;
-            switchAdminLevelSelect.value = adminDetails.adminLevel;
+            switchAdminRoleSelect.value = userProfile.adminRole;
+            switchAdminLevelSelect.value = userProfile.adminLevel;
 
             showStudentView(); // Default view on login is home feed
             renderDepartmentTabs("all");
           } else {
             adminPanelLink.style.display = "none";
-            const studentDetails = credentials.student[userId];
-            const level = studentDetails.level;
+            const level = userProfile.level;
             userRoleDisplay.textContent = `Role: Student (${level}-level)`;
             showStudentView();
-            userDepartment = studentDetails.department;
+            userDepartment = userProfile.department;
             renderDepartmentTabs(userDepartment);
           }
         }
@@ -1158,7 +1132,7 @@
             notificationList.style.display = "none";
             document
               .querySelector(".sidebar-menu a.active")
-              ?.classList.remove("active");
+            ?.classList.remove("active");
             toggleAdminBtn.classList.add("active");
             if (window.innerWidth <= 767.98) {
               sidebar.classList.remove("show");
@@ -1182,80 +1156,16 @@
 
         async function fetchNotifications() {
           try {
-            const mockData = [
-              {
-                id: 1,
-                title: "Exam Timetable",
-                body: "The final exam timetable has been posted on the faculty portal.",
-                department: "All",
-                timestamp: new Date(Date.now() - 1200000),
-                expirationDate: "2025-10-30",
-                posterName: "Engr Zakriya",
-                isRead: false,
-              },
-              {
-                id: 2,
-                title: "Lab Session Cancelled",
-                body: "The Thermodynamics lab session for MECH-301 is cancelled today due to maintenance.",
-                department: "Mechanical Engineering",
-                timestamp: new Date(Date.now() - 3600000),
-                expirationDate: "2025-08-17",
-                posterName: "Engr K.O abdulrahman",
-                isRead: true,
-              },
-              {
-                id: 3,
-                title: "Senior Project Submission",
-                body: "Reminder: All senior projects are due this Friday. Submit your report on the departmental website.",
-                department: "All",
-                timestamp: new Date(Date.now() - 7200000),
-                expirationDate: "2025-09-01",
-                posterName: "Faculty officer",
-                isRead: false,
-              },
-              {
-                id: 4,
-                title: "Guest Lecture",
-                body: 'Guest lecture on "Sustainable Energy Solutions" by Dr. Jane Doe this Wednesday at 10 AM.',
-                department: "Electrical Engineering",
-                timestamp: new Date(Date.now() - 10800000),
-                expirationDate: "2025-08-20",
-                posterName: "Engr Alao",
-                isRead: true,
-              },
-              {
-                id: 5,
-                title: "Exam Results",
-                body: "Final exam results for Civil Engineering have been released.",
-                department: "Civil Engineering",
-                timestamp: new Date(Date.now() - 14400000),
-                expirationDate: "2025-09-15",
-                posterName: "Engr Zakriya",
-                isRead: false,
-              },
-              {
-                id: 6,
-                title: "Field Trip",
-                body: "Chemical Engineering students have a mandatory field trip to the local refinery next week.",
-                department: "Chemical Engineering",
-                timestamp: new Date(Date.now() - 18000000),
-                expirationDate: "2025-08-25",
-                posterName: "Faculty officer",
-                isRead: true,
-              },
-              {
-                id: 7,
-                title: "New Software Engineering Course",
-                body: "The new Software Engineering course registration is now open.",
-                department: "Computer Engineering",
-                timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 - 1),
-                expirationDate: "2025-08-15",
-                posterName: "Associate Professor",
-                isRead: false,
-              },
-            ];
-
-            allNotifications = mockData;
+            const response = await fetch(`${API_BASE_URL}/notifications?department=${currentDepartment}`);
+            if (!response.ok) {
+              throw new Error("Failed to fetch notifications.");
+            }
+            const data = await response.json();
+            // Assuming the backend doesn't track read status, we'll mark the first 3 as unread for the badge.
+            allNotifications = data.map((notif, index) => ({
+              ...notif,
+              isRead: index >= 3
+            }));
             renderNotifications();
             updateNotificationBadge();
           } catch (error) {
@@ -1273,7 +1183,7 @@
                   notif.department.toLowerCase() === currentDepartment.toLowerCase()) &&
                 (!notif.expirationDate || notif.expirationDate >= today)
             )
-            .sort((a, b) => b.timestamp - a.timestamp);
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
           if (filteredNotifications.length === 0) {
             notificationList.innerHTML = `<div class="text-center text-muted p-5">No active notifications found for this department.</div>`;
@@ -1317,209 +1227,176 @@
           const department = document.getElementById("postDepartment").value;
           const expirationDate =
             document.getElementById("postExpirationDate").value;
-          const userId = userIdInput.value.trim();
-          const adminRole = credentials.admin[userId].adminRole;
 
           if (!title || !body) {
             showAlert("Please fill in all fields.");
             return;
           }
-
+          if (!userToken) {
+              showAlert("You must be logged in to post.");
+              return;
+          }
+          
           const newNotification = {
             title,
             body,
             department,
             expirationDate,
-            timestamp: new Date().toISOString(),
-            posterName: adminRole,
-            isRead: false,
           };
 
           try {
-            allNotifications.unshift({
-              ...newNotification,
-              id: Date.now(),
-              timestamp: new Date(),
+            const response = await fetch(`${API_BASE_URL}/notifications`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${userToken}`
+                },
+                body: JSON.stringify(newNotification)
             });
-            renderNotifications();
-            updateNotificationBadge();
-            showAlert("Notification posted successfully!");
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error);
+            }
+            showAlert(result.message);
             postForm.reset();
+            fetchNotifications(); // Reload notifications after posting
           } catch (error) {
             console.error("Error posting notification:", error);
-            showAlert("Failed to post notification. Please try again.");
+            showAlert("Failed to post notification: " + error.message);
           }
         }
 
         // --- Event Handlers ---
-        loginForm.addEventListener("submit", (e) => {
+        loginForm.addEventListener("submit", async (e) => {
           e.preventDefault();
           const userId = userIdInput.value.trim();
           const password = passwordInput.value.trim();
           const role = roleSelect.value;
-
+          
+          let loginData = { userId, password, role };
           if (role === "student") {
-            const studentLevel = studentLoginLevelSelect.value;
-            if (!studentLevel) {
-              showAlert("Please select your level.");
-              return;
+            const level = studentLoginLevelSelect.value;
+            if (!level) {
+                showAlert("Please select your level.");
+                return;
             }
-            if (
-              credentials[role][userId] &&
-              credentials[role][userId].password === password &&
-              credentials[role][userId].level === studentLevel
-            ) {
-              userRole = role;
+            loginData.level = level;
+          }
+
+          try {
+              const response = await fetch(`${API_BASE_URL}/login`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(loginData),
+              });
+              const result = await response.json();
+              
+              if (!response.ok) {
+                  throw new Error(result.error);
+              }
+
+              // Store session data
+              userToken = result.token;
+              userProfile = result.user;
+              userRole = result.user.role;
               isLoggedIn = true;
+
               showAlert("Login successful!");
               renderApp();
-            } else {
-              showAlert("Invalid credentials. Please try again.");
-            }
-          } else if (role === "admin") {
-            if (
-              credentials[role][userId] &&
-              credentials[role][userId].password === password
-            ) {
-              userRole = role;
-              isLoggedIn = true;
-              showAlert("Login successful!");
-              renderApp();
-            } else {
-              showAlert("Invalid credentials. Please try again.");
-            }
+          } catch (error) {
+              showAlert("Login failed: " + error.message);
           }
         });
 
-        signupForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const userId = signupUserIdInput.value.trim();
-          const password = signupPasswordInput.value.trim();
-          const confirmPassword = confirmPasswordInput.value.trim();
-          const role = signupRoleSelect.value;
-          const securityQuestion = securityQuestionSelect.value;
-          const securityAnswer = securityAnswerInput.value.trim();
-          const adminRole = adminRoleSelect.value;
-          const adminLevel = adminLevelSelect.value;
-          const department = signupStudentDepartmentSelect.value;
+        signupForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const role = signupRoleSelect.value;
+            let signupData = {
+                userId: signupUserIdInput.value.trim(),
+                password: signupPasswordInput.value.trim(),
+                confirmPassword: confirmPasswordInput.value.trim(),
+                role,
+            };
 
-          if (
-            !userId ||
-            !password ||
-            !confirmPassword ||
-            (role === "student" && (!securityQuestion || !securityAnswer || !department)) ||
-            (role === "admin" && (!adminRole || !adminLevel))
-          ) {
-            showAlert("Please fill in all fields.");
-            return;
-          }
+            if (signupData.password !== signupData.confirmPassword) {
+                showAlert("Passwords do not match.");
+                return;
+            }
+            delete signupData.confirmPassword; // Don't send confirmPassword to backend
 
-          if (password !== confirmPassword) {
-            showAlert("Passwords do not match.");
-            return;
-          }
+            if (role === "student") {
+                signupData.department = signupStudentDepartmentSelect.value;
+                signupData.securityQuestion = securityQuestionSelect.value;
+                signupData.securityAnswer = securityAnswerInput.value.trim();
+            } else if (role === "admin") {
+                signupData.adminRole = adminRoleSelect.value;
+                signupData.adminLevel = adminLevelSelect.value;
+            }
 
-          if (credentials[role][userId]) {
-            showAlert("Account already exists for this user ID.");
-            return;
-          }
-
-          credentials[role][userId] = { password };
-          if (role === "student") {
-            credentials[role][userId].securityQuestion = securityQuestion;
-            credentials[role][userId].securityAnswer = securityAnswer;
-            const matricLevel = userId.substring(3, 5);
-            credentials[role][userId].level = matricLevel + "00";
-            credentials[role][userId].department = department;
-          } else if (role === "admin") {
-            credentials[role][userId].adminRole = adminRole;
-            credentials[role][userId].adminLevel = adminLevel;
-          }
-
-          showAlert("Account created successfully! You can now log in.");
-          loginCard.style.display = "block";
-          signupCard.style.display = "none";
-          loginForm.reset();
-          signupForm.reset();
+            try {
+                const response = await fetch(`${API_BASE_URL}/signup`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(signupData),
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+                showAlert(result.message + " You can now log in.");
+                toggleToLoginBtn.click(); // Switch to login page on success
+            } catch (error) {
+                showAlert("Signup failed: " + error.message);
+            }
         });
 
-        forgotPasswordForm.addEventListener("submit", (e) => {
+        forgotPasswordForm.addEventListener("submit", async (e) => {
           e.preventDefault();
           const role = roleSelect.value;
           const step = forgotPasswordForm.dataset.step || "1";
-
-          if (role === "student") {
-            if (step === "1") {
-              const userId = forgotUserIdInput.value.trim();
-              recoveryUser = credentials.student[userId];
-              if (recoveryUser) {
-                forgotPasswordForm.dataset.step = "2";
-                forgotPasswordPrompt.textContent =
-                  "Please answer your security question.";
-                forgotUserIdDiv.style.display = "none";
-                securityQuestionDiv.style.display = "block";
-                securityQuestionDisplay.textContent =
-                  recoveryUser.securityQuestion;
-                forgotPasswordSubmitBtn.textContent = "Verify Answer";
-              } else {
-                showAlert("Matric No. not found.");
-              }
-            } else if (step === "2") {
-              const answer = securityAnswerVerifyInput.value
-                .trim()
-                .toLowerCase();
-              if (answer === recoveryUser.securityAnswer.toLowerCase()) {
+          const userId = forgotUserIdInput.value.trim();
+          
+          if (step === "1") {
+            try {
+                // This is a mock since the API contract doesn't have an endpoint for this.
+                // In a real app, this would be an API call to verify the user exists.
+                if ((role === 'student' && userId === '22/30GR023') || (role === 'admin' && userId === 'admin@engrconnect.edu')) {
+                    forgotPasswordForm.dataset.step = "2";
+                    forgotPasswordPrompt.textContent = "Please answer your security question.";
+                    forgotUserIdDiv.style.display = "none";
+                    securityQuestionDiv.style.display = "block";
+                    securityQuestionDisplay.textContent = "What is your favorite color?"; // Mock question
+                    forgotPasswordSubmitBtn.textContent = "Verify Answer";
+                } else {
+                    showAlert("User ID not found.");
+                }
+            } catch (error) {
+                showAlert("Error verifying user.");
+            }
+          } else if (step === "2") {
+            const answer = securityAnswerVerifyInput.value.trim().toLowerCase();
+            if (answer === "blue") { // Mock answer
                 forgotPasswordForm.dataset.step = "3";
                 forgotPasswordPrompt.textContent = "Set your new password.";
                 securityQuestionDiv.style.display = "none";
                 newPasswordDiv.style.display = "block";
                 forgotPasswordSubmitBtn.textContent = "Reset Password";
-              } else {
+            } else {
                 showAlert("Incorrect answer. Please try again.");
-              }
-            } else if (step === "3") {
-              const newPassword = newPasswordInput.value.trim();
-              const newPasswordConfirm = newPasswordConfirmInput.value.trim();
-              if (newPassword && newPassword === newPasswordConfirm) {
-                const userId = forgotUserIdInput.value.trim();
-                credentials.student[userId].password = newPassword;
-                showAlert("Password has been reset successfully!");
-                forgotPasswordForm.reset();
-                forgotPasswordForm.dataset.step = "1";
-                renderApp();
-              } else {
-                showAlert("Passwords do not match or are empty.");
-              }
             }
-          } else if (role === "admin") {
-            if (step === "1") {
-              const userId = forgotUserIdInput.value.trim();
-              recoveryUser = credentials.admin[userId];
-              if (recoveryUser) {
-                // This would typically send an email, but for this demo, we'll simulate it.
-                showAlert("A password reset link has been sent to your email.");
-                // Move to the next step, which would be to enter a new password after clicking the email link
-                forgotPasswordForm.dataset.step = "2";
-                forgotPasswordPrompt.textContent = "Enter your new password.";
-                forgotUserIdDiv.style.display = "none";
-                newPasswordDiv.style.display = "block";
-                forgotPasswordSubmitBtn.textContent = "Reset Password";
-              } else {
-                showAlert("Email not found.");
-              }
-            } else if (step === "2") {
-              const newPassword = newPasswordInput.value.trim();
-              const newPasswordConfirm = newPasswordConfirmInput.value.trim();
-              if (newPassword && newPassword === newPasswordConfirm) {
-                const userId = forgotUserIdInput.value.trim();
-                credentials.admin[userId].password = newPassword;
-                showAlert("Password has been reset successfully!");
-                forgotPasswordForm.reset();
-                forgotPasswordForm.dataset.step = "1";
-                renderApp();
-              } else {
-                showAlert("Passwords do not match or are empty.");
-              }
+          } else if (step === "3") {
+            const newPassword = newPasswordInput.value.trim();
+            const newPasswordConfirm = newPasswordConfirmInput.value.trim();
+            if (newPassword && newPassword === newPasswordConfirm) {
+              // This would be an API call to update the password.
+              // Since there's no public endpoint, this is a mock.
+              showAlert("Password has been reset successfully! You can now log in.");
+              forgotPasswordForm.reset();
+              forgotPasswordForm.dataset.step = "1";
+              forgotToLoginBtn.click();
+            } else {
+              showAlert("Passwords do not match or are empty.");
             }
           }
         });
@@ -1587,6 +1464,8 @@
         document.getElementById("logoutBtn").addEventListener("click", () => {
           isLoggedIn = false;
           userRole = "";
+          userToken = null;
+          userProfile = {};
           showAlert("Logging out...");
           renderApp();
         });
@@ -1613,30 +1492,60 @@
               .forEach((btn) => btn.classList.remove("active"));
             e.target.classList.add("active");
             currentDepartment = e.target.dataset.dept;
-            renderNotifications();
+            fetchNotifications(); // Fetch notifications for the new department
           }
         });
 
         postForm.addEventListener("submit", postNotification);
 
-        switchRoleBtn.addEventListener("click", (e) => {
+        switchRoleBtn.addEventListener("click", async (e) => {
           e.preventDefault();
           const newRole = switchAdminRoleSelect.value;
           const newLevel = switchAdminLevelSelect.value;
-          const userId = userIdInput.value.trim();
-
-          if (newRole && newLevel) {
-            credentials.admin[userId].adminRole = newRole;
-            credentials.admin[userId].adminLevel = newLevel;
-            renderBasedOnRole();
-            showAlert("Admin role and level updated successfully!");
-          } else {
+          
+          if (!newRole || !newLevel) {
             showAlert("Please select both a role and a level.");
+            return;
+          }
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/${userProfile.userId}/role`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${userToken}`
+                },
+                body: JSON.stringify({ adminRole: newRole, adminLevel: newLevel })
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error);
+            }
+            // Update local state with new role
+            userProfile.adminRole = newRole;
+            userProfile.adminLevel = newLevel;
+            renderBasedOnRole();
+            showAlert(result.message);
+          } catch (error) {
+            showAlert("Failed to update role: " + error.message);
           }
         });
 
         darkModeToggle.addEventListener("click", () => {
           document.body.classList.toggle("dark-mode");
+          const darkModeIcon = darkModeToggle.querySelector('i');
+          const darkModeText = darkModeToggle.querySelector('span');
+          
+          if (document.body.classList.contains('dark-mode')) {
+            darkModeIcon.classList.remove('bi-moon-fill');
+            darkModeIcon.classList.add('bi-sun-fill');
+            darkModeText.textContent = 'Light Mode';
+          } else {
+            darkModeIcon.classList.remove('bi-sun-fill');
+            darkModeIcon.classList.add('bi-moon-fill');
+            darkModeText.textContent = 'Dark Mode';
+          }
         });
 
         notificationIcon.addEventListener("click", () => {
